@@ -8,6 +8,7 @@ import './assets/style/global.scss';
 
 import { Routers } from './routers';
 import { MuiProvider } from 'theme';
+import { config } from './config/config';
 import { GlobalProvider } from './provider';
 import reportWebVitals from './reportWebVitals';
 
@@ -15,7 +16,7 @@ ReactDOM.render(
   <React.StrictMode>
     <UseWalletProvider
       // autoConnect={true}
-      connectors={{ injected: { chainId: [351, 421613] } }}
+      connectors={{ injected: { chainId: [config.CHAINID] } }}
     >
       <GlobalProvider>
         <MuiProvider>
