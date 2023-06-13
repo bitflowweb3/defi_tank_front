@@ -1,8 +1,6 @@
 {
-    "4002": {
-        "bridge": "0x9EcA8Bdcd6b6a73723b7EcEFbe9C9D0b1c4bd49A"
-    },
-    "421613": {
-        "bridge": "0x1F2A47bdDEBd6128bD07DE224B46230BB397c232"
-    }
+    "NFTTank": "0xc81AE40Cce93D7B5e11996f7af4d00b2267fDB5c",
+    "EnergyPool": "0x97Bb7BBF62414376217D7e0394bEA36c4D645c10",
+    "TankToken": "0xcb6460d56825ddc12229c7a7d94b6b26a9f9c867",
+    "RewardPool": "0x6a9030305CC5cD64d6D06EF8292C376Dfb83fB4C"
 }

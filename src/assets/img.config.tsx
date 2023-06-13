@@ -1,9 +1,12 @@
 import React from 'react'
 
-import BGIMG from "./image/back.webp"
+import bgImg from "./image/back.webp"
+import logoImg from "./image/tanklogo.png"
+
 
 const imgConfig = {
-  BGIMG,
+  bgImg,
+  logoImg,
 }
 
 export { imgConfig }

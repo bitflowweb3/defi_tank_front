@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import ReactDOM from 'react-dom';
 import { UseWalletProvider } from 'use-wallet'
 
@@ -13,9 +13,9 @@ import { GlobalProvider } from './provider';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
+  // @ts-ignore
   <React.StrictMode>
-    <UseWalletProvider
-      // autoConnect={true}
+    <UseWalletProvider autoConnect={true}
       connectors={{ injected: { chainId: [config.CHAINID] } }}
     >
       <GlobalProvider>
