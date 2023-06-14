@@ -1,0 +1,10 @@
+[
+  {
+    "project": "DFTL",
+    "tokenAddress": "0xDCbF4d0f17840823284763B40Db580533B8A4Ac7",
+    "decimals": 18,
+    "price": 1000000,
+    "maxNFT": 10000,
+    "maxPerWallet": 100
+  }
+]

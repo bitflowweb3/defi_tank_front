@@ -58,6 +58,20 @@ export const getSubString = (text: string) => {
   return tempText
 }
 
+export const byte32code = (code: string): boolean => {
+  try {
+    if (code.length !== 66 || !code.startsWith("0x")) {
+      return false
+    }
+
+    const str = ethers.utils.parseBytes32String(code)
+    return true
+  } catch (err: any) {
+    console.log(err)
+    return false
+  }
+}
+
 
 /**
  * change data type from number to BigNum

@@ -20,5 +20,13 @@ interface InitStateObject {
   account: string | null
   walletStatus: number
 
+  tankItems: TankObject[]
+  tankClasses: ClassesObject[]
   notifications: NotifiObject[]
+
+  stakes: any,
+  stakeRate: number,
+  rewardPoolBalance: number,
+  allowances: { toTank: number, toPool: number },
+  poolsInfo: { totalStakedAmount: number, totalCapacity: number },
 }

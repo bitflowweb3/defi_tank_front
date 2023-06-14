@@ -25,7 +25,7 @@ export const Header = () => {
 
   return (
     <Toolbar>
-      <div className="flex-1 flex flex-row items-center px-20">
+      <div className="flex-1 flex flex-row items-center">
         <IconButton edge="start" color="primary"
           sx={{ display: { sm: "none" } }}
           onClick={openMobileSidebar}
