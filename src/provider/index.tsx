@@ -7,9 +7,9 @@ import { createContext, useContext } from "react";
 import detectEthereumProvider from '@metamask/detect-provider'
 
 import { restApi } from "./restApi";
-import { byte32code, fromBigNum, tips, toBigNum } from "../utils/util";
 import { config } from "../config/config";
 import { getTokenBalance, switchNetwork } from "./service";
+import { byte32code, fromBigNum, tips, toBigNum } from "../utils/util";
 import { EnergyPool, EnergyPool_m, NFTTANK, RewardPool, TANKTOKEN, multicallHelper } from "../blockchain";
 
 const metamaskStore = 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn'

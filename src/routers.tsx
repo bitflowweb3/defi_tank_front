@@ -8,12 +8,12 @@ import { useGlobalContext } from './provider';
 import { PoolsPage } from 'pages/pools/pools';
 import { Loading } from './components/Loading';
 import { Refcode } from './pages/refCode/refCode';
+import { RewardsPage } from 'pages/rewards/rewards';
 import { UserPage } from './pages/userPage/userPage';
 import { LendingPage } from './pages/lending/lending';
 import { NotFoundPage } from './pages/404page/404page';
 import { ItemDetail } from './pages/itemDetail/itemDetail';
 import { ClassDetail } from 'pages/classDetail/classDetail';
-import RewardsPage from 'pages/rewards/rewards';
 import { ReferralPage } from 'pages/referral/referral';
 
 export const Routers = () => {

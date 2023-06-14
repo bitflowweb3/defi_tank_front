@@ -74,7 +74,7 @@ const columns: GridColDef[] = [
 
 const rewardRate = [5, 4, 3, 2, 1]
 
-export default function RewardsPage() {
+export const RewardsPage = () => {
   const [state] = useGlobalContext();
   const [filter, setFilter] = useState("");
   const [allData, setAllData] = useState([]);
