@@ -28,9 +28,9 @@ export const UserPage = () => {
       case "All":
         return true
       case "Lended":
-        return item.borrower?.toUpperCase() !== tempAddr?.toUpperCase()
+        return item.borrower !== tempAddr
       case "OnMine":
-        return item.borrower?.toUpperCase() === tempAddr?.toUpperCase()
+        return item.borrower === tempAddr
     }
 
     return item
@@ -38,8 +38,8 @@ export const UserPage = () => {
 
   const myTanks = useMemo(() => {
     let items = state.tankItems.filter((tankItem: TankObject) => {
-      const ownerFlag = tankItem.owner?.toUpperCase() === tempAddr?.toUpperCase()
-      const borrowerFlag = tankItem.borrower?.toUpperCase() === tempAddr?.toUpperCase()
+      const ownerFlag = tankItem.owner === tempAddr
+      const borrowerFlag = tankItem.borrower === tempAddr
 
       return ownerFlag || borrowerFlag
     }).filter((item: TankObject) => {

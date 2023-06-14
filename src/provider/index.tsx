@@ -54,8 +54,9 @@ const GlobalProvider = ({ children }: any) => {
     (async () => {
       if (wallet.status === 'connected') {
         const tempSigner = await getSigner()
+        const tempAddr = wallet.account.toUpperCase()
 
-        dispatch({ type: "account", payload: wallet.account })
+        dispatch({ type: "account", payload: tempAddr })
         dispatch({ type: "signer", payload: tempSigner })
         dispatch({ type: "walletStatus", payload: 2 })
       } else {
@@ -279,8 +280,28 @@ const GlobalProvider = ({ children }: any) => {
     }
   }
 
+  const updateNofitication = async () => {
+    try {
+      if (state.walletStatus !== 2) {
+        throw new Error("please wallet connect")
+      }
+
+      let tempResult = await restApi.getAlert(state.account)
+      dispatch({ type: "notifications", payload: tempResult })
+
+      return true
+    } catch (err) {
+      if (state.notifications.length > 0) {
+        dispatch({ type: "notifications", payload: [] })
+      }
+
+      return false
+    }
+  }
+
   useEffect(() => {
     updatePoolStatus()
+    updateNofitication()
 
     if (state.walletStatus === 2) {
       updateBalanceAndAlloance()
@@ -313,6 +334,7 @@ const GlobalProvider = ({ children }: any) => {
           connectToMetamask,
           disconnectMetamask,
 
+          updateNofitication,
           approveToken,
           mintNFT,
           upgradeNFT,

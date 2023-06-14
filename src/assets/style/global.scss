@@ -13,7 +13,7 @@
   $scrollHeight: 10px;
   $scrollBG_track : #6e829c;
   $scrollBG_thumb : #061d31;
-  $scrollColor : #26384c #452d6b;
+  $scrollColor : #26384c #eee7f8;
 
   box-sizing: border-box;
   scrollbar-width: $scrollWidth;
@@ -37,12 +37,11 @@
 html,
 body {
   margin: 0;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 400;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
   color: #ffffff;
 }
 
@@ -70,4 +69,19 @@ body {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+h3 {
+  font-size: 1.17em;
+  font-weight: bold;
 }

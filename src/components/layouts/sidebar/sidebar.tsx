@@ -1,5 +1,4 @@
 import React from "react"
-import { useState } from "react"
 import { Link } from "react-router-dom";
 import { Box, Drawer, Toolbar, List, ListItem, ListItemButton } from '@mui/material';
 
@@ -82,9 +81,9 @@ export const Sidebar = () => {
               </ListItem>
             ))}
 
-            {/* {wallet.status === "connected" && (
+            {state.walletStatus === 2 && (
               <ReferralMenu />
-            )} */}
+            )}
           </List>
         </div>
       </Drawer>
@@ -129,9 +128,9 @@ export const Sidebar = () => {
               </ListItem>
             ))}
 
-            {/* {wallet.status === "connected" && (
+            {state.walletStatus === 2 && (
               <ReferralMenu />
-            )} */}
+            )}
           </List>
         </div>
       </Drawer>

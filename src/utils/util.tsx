@@ -10,6 +10,20 @@ export const Now = () => {
   return Math.round(new Date().getTime() / 1000);
 }
 
+export const convertHMS = (value: any) => {
+  const sec = parseInt(value, 10); // convert value to number if it's string
+  let hours: any = Math.floor(sec / 3600); // get hours
+  let minutes: any = Math.floor((sec - (hours * 3600)) / 60); // get minutes
+  let seconds: any = sec - (hours * 3600) - (minutes * 60); //  get seconds
+
+  // add 0 if value < 10; Example: 2 => 02
+  if (hours < 10) { hours = "0" + hours; }
+  if (minutes < 10) { minutes = "0" + minutes; }
+  if (seconds < 10) { seconds = "0" + seconds; }
+
+  return hours + ':' + minutes + ':' + seconds; // Return is HH : MM : SS
+}
+
 export const tips = (type: string, html: string) => {
   switch (type) {
     case 'info': {
@@ -45,7 +59,7 @@ export const textCopy = (text: string) => {
     tempText += text.substring(text.length, text.length - 5)
   }
 
-  tips("success", "Copied: " + text);
+  tips("success", "Copied: " + tempText);
 }
 
 export const getSubString = (text: string) => {
@@ -53,6 +67,16 @@ export const getSubString = (text: string) => {
 
   if (text.length > 10) {
     tempText = text.slice(0, 5) + '...' + text.slice(-5)
+  }
+
+  return tempText
+}
+
+export const ellipsis = (address: string, start: number = 6) => {
+  let tempText = address
+
+  if (address.length > (start + 7)) {
+    tempText = `${address.slice(0, start)}...${address.slice(-4)}`
   }
 
   return tempText

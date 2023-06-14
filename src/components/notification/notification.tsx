@@ -3,9 +3,11 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import './notification.scss'
 import { useGlobalContext } from 'provider';
+import { restApi } from 'provider/restApi';
 
 export const Notification = () => {
-  const [state, { dispatch }] = useGlobalContext()
+  const [state, { dispatch, updateNofitication }] = useGlobalContext()
+
   const [showNotifi, setshowNotifi] = useState<Boolean>(false);
   const [notifications, setotifications] = useState<NotifiObject[]>([])
 
@@ -17,16 +19,35 @@ export const Notification = () => {
   const openNotifi = () => { setshowNotifi(true) }
 
   const readAll = async () => {
-    // if (!state.notifications.length) {
-    //   return
-    // }
+    try {
+      if (!state.notifications.length) {
+        return
+      }
 
-    // const token = state.authInfo.token
-    // const tempNotifi = await restApi.readAllNotifi(token)
+      dispatch({
+        type: "loading",
+        payload: true
+      })
 
-    // if (tempNotifi) {
-    //   dispatch({ type: "notifications", payload: tempNotifi });
-    // }
+      for (let i = 0; i < notifications.length; i++) {
+        const notifi: NotifiObject = notifications[i]
+        await restApi.readAlert(notifi._id)
+
+      }
+
+      await updateNofitication()
+
+      dispatch({
+        type: "loading",
+        payload: false
+      })
+    } catch (err) {
+      console.log(err.message)
+      dispatch({
+        type: "loading",
+        payload: false
+      })
+    }
   }
 
   return (
@@ -71,16 +92,29 @@ export const Notification = () => {
 }
 
 const NotifiItem = ({ notifi }: { notifi: NotifiObject }) => {
-  const [state, { dispatch }] = useGlobalContext()
+  const [state, { dispatch, updateNofitication }] = useGlobalContext()
 
   const readAlert = async () => {
-    // const _id = notifi._id
-    // const token = state.authInfo.token
-    // const tempNotifi = await restApi.readNotifi(token, _id)
+    try {
+      dispatch({
+        type: "loading",
+        payload: true
+      })
 
-    // if (tempNotifi) {
-    //   dispatch({ type: "notifications", payload: tempNotifi });
-    // }
+      await restApi.readAlert(notifi._id)
+      await updateNofitication()
+
+      dispatch({
+        type: "loading",
+        payload: false
+      })
+    } catch (err) {
+      console.log(err.message)
+      dispatch({
+        type: "loading",
+        payload: false
+      })
+    }
   }
 
   return (

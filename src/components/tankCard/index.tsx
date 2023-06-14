@@ -47,7 +47,7 @@ export const TankItemCard = ({ item }: TankCardProps) => {
     let currentExp = item.experience - levelXp;
     let energyRecoverPerHour = (item.maxEnergy / 24).toFixed(2);
 
-    if (item.owner?.toUpperCase() === state.account?.toUpperCase()) {
+    if (item.owner === state.account) {
       itemType = ItemType.onUserMine
     } else itemType = ItemType.onUser;
 
@@ -168,7 +168,7 @@ export const TankItemCard = ({ item }: TankCardProps) => {
 
         {tankInfo.itemType === ItemType.onUserMine ? (
           <Stack spacing={2} direction="row">
-            {tankInfo.borrower.toUpperCase() === tankInfo.owner.toUpperCase() ? (
+            {tankInfo.borrower === tankInfo.owner ? (
               <ActionButton2 onClick={handleLend}>Lend</ActionButton2>
             ) : (
               <ActionButton2 onClick={handleBorrow}>retrieve</ActionButton2>
@@ -176,11 +176,11 @@ export const TankItemCard = ({ item }: TankCardProps) => {
           </Stack>
         ) : (
           <Stack spacing={2} direction="row">
-            {tankInfo.borrower.toUpperCase() === "" && (
+            {tankInfo.borrower === "" && (
               <ActionButton1 onClick={handleBorrow}>Borrow</ActionButton1>
             )}
 
-            {tankInfo.borrower.toUpperCase() === state.account?.toUpperCase() && (
+            {tankInfo.borrower === state.account && (
               <ActionButton1 onClick={handleLend}>Return</ActionButton1>
             )}
           </Stack>

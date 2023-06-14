@@ -24,6 +24,41 @@ export const restApi = {
     return result.data;
   },
 
+  updateName: async (id: string, newName: string, newDescription: string, signature: string) => {
+    try {
+      const params = { id, newName, newDescription, signature }
+      const result = await axios.post("/api/tanks/update-name", params)
+
+      return result.data
+    } catch (err: any) {
+      console.log(err.message)
+      throw new Error(err.message)
+    }
+  },
+
+  getAllProfiles: async () => {
+    let result = await axios.post("/api/user/get-alldata");
+    return result.data;
+  },
+
+  getReferralData: async (address: string) => {
+    const params = { to: address }
+    const result = await axios.post("/api/user/get-referrals", params)
+    return result.data
+  },
+
+  getReferrerInfo: async (referrers: string[] | null) => {
+    const params = { referrers }
+    const result = await axios.post("/api/user/get-referrerdata", params)
+    return result.data
+  },
+
+  claimReward: async (user: any) => {
+    const params = { user: user }
+    const result = await axios.post("/api/user/claim-reward", params)
+    return result.data
+  },
+
   // tank apis
   lend: async (id: string, to: string, signature: string) => {
     const params = { id, to, signature }
@@ -59,4 +94,17 @@ export const restApi = {
     const result = await axios.post("/api/tanks/get-upgradesign", params)
     return result.data
   },
+
+  // user notification apis
+  getAlert: async (address: string) => {
+    const params = { user: address }
+    const result = await axios.post("/api/user/get-alert", params)
+    return result.data
+  },
+
+  readAlert: async (id: string) => {
+    const params = { id }
+    const result = await axios.post("/api/user/read-alert", params)
+    return result.data
+  }
 }
