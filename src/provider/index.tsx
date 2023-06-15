@@ -222,20 +222,30 @@ const GlobalProvider = ({ children }: any) => {
   }
 
   const updateBalanceAndAlloance = async () => {
-    const allowanceToTankContract = await TANKTOKEN.connect(state.signer).allowance(state.account, NFTTANK.address);
-    const allowanceToPoolContract = await TANKTOKEN.connect(state.signer).allowance(state.account, EnergyPool.address);
+    try {
+      const tankAllowance = await TANKTOKEN.connect(state.signer).allowance(wallet.account, NFTTANK.address);
+      const poolAllowance = await TANKTOKEN.connect(state.signer).allowance(wallet.account, EnergyPool.address);
 
-    const tempAllow = state.allowances
-    const allowTank = fromBigNum(allowanceToTankContract, 18)
-    const allowPool = fromBigNum(allowanceToPoolContract, 18)
-    const balance = await getTokenBalance(state.account, state.signer)
+      const tempAllow = state.allowances
+      const allowTank = fromBigNum(tankAllowance, 18)
+      const allowPool = fromBigNum(poolAllowance, 18)
+      const balance = await getTokenBalance(wallet.account, state.signer)
 
-    if (state.balance !== balance || tempAllow.toTank !== allowTank || tempAllow.toPool !== allowPool) {
-      dispatch({ type: "balance", payload: balance })
-      dispatch({
-        type: "allowances",
-        payload: { toTank: allowTank, toPool: allowPool }
-      })
+      const flagBalance = state.balance !== balance
+      const flagAllowTank = tempAllow.toTank !== allowTank
+      const flagAllowPool = tempAllow.toPool !== allowPool
+
+      if (flagBalance || flagAllowTank || flagAllowPool) {
+        const tempPayload = {
+          toTank: allowTank,
+          toPool: allowPool
+        }
+
+        dispatch({ type: "balance", payload: balance })
+        dispatch({ type: "allowances", payload: tempPayload })
+      }
+    } catch (err) {
+      console.log(err.message)
     }
   }
 
@@ -247,7 +257,7 @@ const GlobalProvider = ({ children }: any) => {
 
       if (!!state.account) {
         const calls: any = state.tankItems.map((tankItem: TankObject) => {
-          return EnergyPool_m.balanceOf(state.account, tankItem.id);
+          return EnergyPool_m.balanceOf(wallet.account, tankItem.id);
         })
 
         let tempStakes: any = {}
@@ -330,6 +340,7 @@ const GlobalProvider = ({ children }: any) => {
     <GlobalContext.Provider
       value={useMemo(() => [
         state, {
+          account: wallet.account,
           dispatch,
           connectToMetamask,
           disconnectMetamask,

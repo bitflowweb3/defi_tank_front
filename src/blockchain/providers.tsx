@@ -12,7 +12,7 @@ const RPCS = {
   421613: "https://goerli-rollup.arbitrum.io/rpc",
   42161: "https://arb1.arbitrum.io/rpc",
   5: "https://goerli.blockpi.network/v1/rpc/public",
-};
+}
 
 const providers = {
   250: new ethers.providers.JsonRpcProvider(RPCS[250]),
@@ -22,7 +22,7 @@ const providers = {
   42161: new ethers.providers.JsonRpcProvider(RPCS[42161]),
   421613: new ethers.providers.JsonRpcProvider(RPCS[421613]),
   5: new ethers.providers.JsonRpcProvider(RPCS[5]),
-};
+}
 
 const provider = providers[supportChainId];
 

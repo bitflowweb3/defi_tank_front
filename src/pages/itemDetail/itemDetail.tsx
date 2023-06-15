@@ -261,9 +261,11 @@ export const ItemDetail = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <EditPanel item={item}
-          onClose={() => setOpenaNameModal(false)}
-        />
+        <div>
+          <EditPanel item={item}
+            onClose={() => setOpenaNameModal(false)}
+          />
+        </div>
       </Modal>
     </Layouts>
   )

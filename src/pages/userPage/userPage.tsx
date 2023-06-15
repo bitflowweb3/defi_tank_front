@@ -58,7 +58,7 @@ export const UserPage = () => {
       <ProfilePanel address={tempAddr} />
 
       <Stack spacing={2}
-        marginTop={"30px"}
+        marginTop="30px"
         alignItems="center"
         justifyContent="space-between"
         direction={{ xs: "column", sm: "row" }}

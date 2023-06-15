@@ -68,8 +68,12 @@ export const BuyPanel = ({ item, onClose }: ParamObject) => {
             value={paymentToken.project}
             labelId="demo-simple-select-standard-label"
           >
-            {buyOption.map(token => (
-              <MenuItem value={token.project}>{token.project}</MenuItem>
+            {buyOption.map((token, key: number) => (
+              <MenuItem key={key}
+                value={token.project}
+              >
+                {token.project}
+              </MenuItem>
             ))}
           </Select>
         </Row>

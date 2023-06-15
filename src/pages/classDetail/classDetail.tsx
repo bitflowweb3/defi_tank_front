@@ -110,9 +110,11 @@ export const ClassDetail = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <BuyPanel item={buyItem}
-          onClose={() => { setBuyItem(null) }}
-        />
+        <div>
+          <BuyPanel item={buyItem}
+            onClose={() => { setBuyItem(null) }}
+          />
+        </div>
       </Modal>
     </Box>
   )

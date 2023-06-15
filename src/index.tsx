@@ -14,17 +14,17 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   // @ts-ignore
-  <React.StrictMode>
-    <UseWalletProvider autoConnect={true}
-      connectors={{ injected: { chainId: [config.CHAINID] } }}
-    >
-      <GlobalProvider>
-        <MuiProvider>
-          <Routers />
-        </MuiProvider>
-      </GlobalProvider>
-    </UseWalletProvider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <UseWalletProvider autoConnect={true}
+    connectors={{ injected: { chainId: [config.CHAINID] } }}
+  >
+    <GlobalProvider>
+      <MuiProvider>
+        <Routers />
+      </MuiProvider>
+    </GlobalProvider>
+  </UseWalletProvider>,
+  // </React.StrictMode>,
   document.getElementById('root')
 )
 
