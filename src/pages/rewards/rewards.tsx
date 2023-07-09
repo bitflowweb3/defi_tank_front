@@ -118,7 +118,6 @@ export const RewardsPage = () => {
     return allData.sort((a: any, b: any) => {
       return a.merit < b.merit ? 1 : -1;
     }).map((item: any, index: number) => {
-      console.log("state.rewardPoolBalance", state.rewardPoolBalance);
       let data = {
         ...item,
         address: ellipsis(item.address, 20),
@@ -217,7 +216,7 @@ export const RewardsPage = () => {
         <Box sx={{ height: 650, width: "100%" }}>
           <DataGrid rows={rows}
             columns={columns}
-            pageSize={1}
+            pageSize={10}
             rowHeight={70}
             getRowId={(row) => row.rank}
             rowsPerPageOptions={[10]}

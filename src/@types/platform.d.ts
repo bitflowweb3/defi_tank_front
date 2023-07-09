@@ -21,7 +21,7 @@ interface UserObject {
   borrowCount?: number
 }
 
-interface TankObject {
+interface NftTankObject {
   id: string
   owner: string
   level?: string
@@ -47,19 +47,31 @@ interface TankObject {
   updatedAt?: Date
 }
 
-interface ClassesObject {
-  id: number
-  name?: string
-  image?: string
-  description?: string
-  health?: number
-  fireRate?: number
-  firePower?: number
-  speed?: number
-  healthAdd?: number
-  fireRateAdd?: number
+interface GuildObject {
+  id: string
+  name: string
+  image: string
+  description: string
+  owner: string
+  maxMembers: number
+  merit?: number
+  level?: number
+  members?: string[]
+  requests?: string[]
+  followers?: string[]
+  role?: string
+}
 
-  firePowerAdd?: number
-  speedAdd?: number
-  price?: number
+interface ItemObject {
+  id: string
+  name: string
+  image: string
+  description: string
+  owner: string
+  limitation: number
+  maxLimit: number
+  merit?: number
+  level?: number
+  followers?: string[]
+  role?: string
 }

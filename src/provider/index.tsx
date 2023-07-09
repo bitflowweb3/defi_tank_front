@@ -23,9 +23,16 @@ const INIT_STATE: InitStateObject = {
   account: null,
   walletStatus: 0, // 0: no metamask detect, 1: not connected, 2: connected
 
+  itemDatas: [],
+  guildDatas: [],
   tankItems: [],
-  tankClasses: [],
   notifications: [],
+  tankClasses: [],
+  itemClasses: [],
+  guildRules: {
+    maxMembers: 0,
+    price: 0,
+  },
 
   stakes: {},
   stakeRate: 1,
@@ -52,7 +59,7 @@ const GlobalProvider = ({ children }: any) => {
   // wallet section start
   useEffect(() => {
     (async () => {
-      if (wallet.status === 'connected') {
+      if (wallet.status === 'connected' && wallet.account) {
         const tempSigner = await getSigner()
         const tempAddr = wallet.account.toUpperCase()
 
@@ -65,7 +72,7 @@ const GlobalProvider = ({ children }: any) => {
         dispatch({ type: "account", payload: null })
       }
     })()
-  }, [wallet.status, wallet.chainId])
+  }, [wallet.status, wallet.account, wallet.chainId])
 
   const detect = async () => {
     let tempStatus = 0
@@ -135,7 +142,7 @@ const GlobalProvider = ({ children }: any) => {
     return tx
   }
 
-  const mintNFT = async (id: string, price: number) => {
+  const mintTank = async (id: number, price: number) => {
     if (!state.signer) {
       throw new Error("Wallet isn't connected!")
     }
@@ -188,33 +195,41 @@ const GlobalProvider = ({ children }: any) => {
   }
 
   // data caching functions
-  const updateTankClasses = async () => {
+  const updateBaseClasses = async () => {
     try {
-      const tempDatas = await restApi.getTankClasses()
+      const tempDatas = await restApi.getBaseClasses()
 
       if (tempDatas.status) {
-        dispatch({ type: "tankClasses", payload: tempDatas.data })
+        dispatch({ type: "tankClasses", payload: tempDatas.tankClasses })
+        dispatch({ type: "itemClasses", payload: tempDatas.itemClasses })
+        dispatch({ type: "guildRules", payload: tempDatas.guildRules })
       }
     } catch (err: any) {
       console.log("provider/tankClasses", err.message)
     }
   }
 
-  const updateTankItems = async () => {
+  const updateBaseNfts = async () => {
     try {
-      const resData = await restApi.getTankItems()
+      const resData = await restApi.getAllNfts()
 
       if (resData.status) {
-        let tempTanks: TankObject[] = resData.data
-        let totalStakedAmount = 0, totalCapacity = 0
+        let tempItem: ItemObject[] = resData.nftItem
+        let tempGuild: GuildObject[] = resData.nftGuild
+        let tempTanks: NftTankObject[] = resData.nftTank
 
-        tempTanks.forEach((tempTank: TankObject) => {
-          totalStakedAmount += Number(tempTank.energyPool)
-          totalCapacity += Number(tempTank.maxEnergyPool)
-        })
-
+        dispatch({ type: "itemDatas", payload: tempItem });
+        dispatch({ type: "guildDatas", payload: tempGuild });
         dispatch({ type: "tankItems", payload: tempTanks });
-        dispatch({ type: "poolsInfo", payload: { totalStakedAmount, totalCapacity } })
+
+        // let totalStakedAmount = 0, totalCapacity = 0
+
+        // tempTanks.forEach((tempTank: NftTankObject) => {
+        //   totalStakedAmount += Number(tempTank.energyPool)
+        //   totalCapacity += Number(tempTank.maxEnergyPool)
+        // })
+
+        // dispatch({ type: "poolsInfo", payload: { totalStakedAmount, totalCapacity } })
       }
     } catch (err: any) {
       console.log("provider/tankClasses", err.message);
@@ -256,14 +271,14 @@ const GlobalProvider = ({ children }: any) => {
       dispatch({ type: "stakeRate", payload: tempRate })
 
       if (!!state.account) {
-        const calls: any = state.tankItems.map((tankItem: TankObject) => {
+        const calls: any = state.tankItems.map((tankItem: NftTankObject) => {
           return EnergyPool_m.balanceOf(wallet.account, tankItem.id);
         })
 
         let tempStakes: any = {}
         let res = await multicallHelper(calls);
 
-        state.tankItems.forEach((tankItem: TankObject, key: number) => {
+        state.tankItems.forEach((tankItem: NftTankObject, key: number) => {
           tempStakes[tankItem.id] = fromBigNum(res[key], 18)
         })
 
@@ -329,10 +344,10 @@ const GlobalProvider = ({ children }: any) => {
   }, [state.walletStatus, state.tankItems])
 
   useEffect(() => {
-    updateTankItems()
-    updateTankClasses()
+    updateBaseNfts()
+    updateBaseClasses()
     updateRewardPoolBalance()
-    setInterval(updateTankItems, 5000)
+    setInterval(updateBaseNfts, 5000)
   }, [])
 
   return (
@@ -347,7 +362,7 @@ const GlobalProvider = ({ children }: any) => {
 
           updateNofitication,
           approveToken,
-          mintNFT,
+          mintTank,
           upgradeNFT,
           stake,
           unstake,

@@ -9,7 +9,7 @@ const RPCS = {
   4002: "https://rpc.testnet.fantom.network",
   9000: "https://eth.bd.evmos.dev:8545",
   9001: "https://eth.bd.evmos.org:8545",
-  421613: "https://goerli-rollup.arbitrum.io/rpc",
+  421613: "https://arbitrum-goerli.publicnode.com",
   42161: "https://arb1.arbitrum.io/rpc",
   5: "https://goerli.blockpi.network/v1/rpc/public",
 }

@@ -8,7 +8,7 @@ import { restApi } from "provider/restApi";
 import { useGlobalContext } from "provider";
 import { ActionButton1 } from "components/buttons";
 
-export const LendPanel = ({ item }: { item: TankObject }) => {
+export const LendPanel = ({ item }: { item: NftTankObject }) => {
   const [to, setTo] = useState("")
   const [state] = useGlobalContext();
 

@@ -20,9 +20,13 @@ interface InitStateObject {
   account: string | null
   walletStatus: number
 
-  tankItems: TankObject[]
-  tankClasses: ClassesObject[]
+  itemDatas: ItemObject[]
+  guildDatas: GuildObject[]
+  tankItems: NftTankObject[]
   notifications: NotifiObject[]
+  tankClasses: TankClassObject[]
+  itemClasses: ItemClassObject[]
+  guildRules: GuildRuleObject
 
   stakes: any,
   stakeRate: number,

@@ -6,12 +6,16 @@ const MenuList = [
     href: "/play",
   },
   {
-    title: "Create",
+    title: "My Profile",
+    href: "/profile",
+  },
+  {
+    title: "Create NFT",
     href: "/create",
   },
   {
-    title: "My Tanks",
-    href: "/my-tanks",
+    title: "Create Guild",
+    href: "/create-guild",
   },
   {
     title: "Lending",

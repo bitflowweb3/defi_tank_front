@@ -7,7 +7,7 @@ import { restApi } from "provider/restApi";
 import { useGlobalContext } from "provider";
 import { ActionButton1 } from "components/buttons";
 
-export const EditPanel = ({ item, onClose }: { item: TankObject, onClose: CallableFunction }) => {
+export const EditPanel = ({ item, onClose }: { item: NftTankObject, onClose: CallableFunction }) => {
   const [state] = useGlobalContext()
   const [name, setName] = useState(item.name)
   const [description, setDescription] = useState(item.description)

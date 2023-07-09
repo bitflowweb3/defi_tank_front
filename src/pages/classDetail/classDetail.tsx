@@ -12,117 +12,12 @@ import fireRateIcon from 'assets/image/firerateicon.png';
 
 import { useGlobalContext } from "provider";
 import { BuyPanel } from "../mint/common/buyPanel";
+import { Layouts } from "components/layouts/layouts";
 import { ActionButton1, ActionButton2 } from "components/buttons";
-
-export const ClassDetail = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [buyItem, setBuyItem] = useState(null);
-
-  const [state] = useGlobalContext();
-  const classInfo = state.tankClasses.find((tankClass: ClassesObject) => (
-    tankClass.id === Number(id)
-  ))
-
-  /* ----- actions ----- */
-  const handleBuy = async () => {
-    setBuyItem(classInfo)
-  }
-
-  // return to 404 page if item is not exist
-  if (!classInfo) {
-    if (state.tankClasses.length !== 0) {
-      navigate('/404')
-    }
-
-    return (<></>)
-  }
-
-  return (
-    <Box>
-      <ActionButton2 sx={{ m: "5px", mb: '10px' }}
-        onClick={() => { navigate(-1) }}
-      >
-        <ArrowBackIcon /> back
-      </ActionButton2>
-
-      <StyledPanel>
-        <SubPanel>
-          <Stack direction="column">
-            <Row>
-              <Typography variant="h4">
-                {classInfo.name}
-              </Typography>
-            </Row>
-
-            <Box sx={{
-              mt: 3,
-              marginInline: "auto",
-              height: { lg: "500px" }
-            }}>
-              <Box alt=""
-                component="img"
-                src={classInfo.image}
-                sx={{
-                  m: { md: "30px" },
-                  maxHeight: "450px",
-                  textAlign: "center",
-                  borderRadius: "20px",
-                  //   width: { md: "calc(100% - 100px)", xs: "100%" },
-                  maxWidth: { md: "calc(100% - 100px)", xs: "100%" },
-                }}
-              />
-            </Box>
-          </Stack>
-        </SubPanel>
-
-        <SubPanel>
-          <Stack direction="column">
-            <Stack direction="column">
-              <Typography variant="h5">Description</Typography>
-              <Typography>{classInfo.description}</Typography>
-            </Stack>
-
-            <Row sx={{ mt: "30px" }} justifyContent="start" spacing={4}>
-              <Typography>ID:</Typography>
-              <Typography>{classInfo.id}</Typography>
-            </Row>
-
-            <Row sx={{ pb: "20px" }} alignItems="end">
-              <Stack spacing={2} direction="column">
-                <Typography>Price : {classInfo.price} DFTL</Typography>
-                <ActionButton1 onClick={handleBuy}>Buy</ActionButton1>
-              </Stack>
-            </Row>
-
-            {/* Property */}
-            <Row sx={{ mt: "30px" }}>
-              <Typography variant="h5">Properties</Typography>
-            </Row>
-
-            <PropertyPanel id={id} />
-          </Stack>
-        </SubPanel>
-      </StyledPanel>
-
-      <Modal open={buyItem != null}
-        onClose={() => setBuyItem(null)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div>
-          <BuyPanel item={buyItem}
-            onClose={() => { setBuyItem(null) }}
-          />
-        </div>
-      </Modal>
-    </Box>
-  )
-}
 
 const PropertyPanel = ({ id }: { id: string | undefined }) => {
   const [state] = useGlobalContext();
-  const classInfo: ClassesObject = state.tankClasses.find((tankClass: ClassesObject) => (
+  const tankClass: TankClassObject = state.tankClasses.find((tankClass: TankClassObject) => (
     tankClass.id === Number(id)
   ))
 
@@ -132,31 +27,31 @@ const PropertyPanel = ({ id }: { id: string | undefined }) => {
         // fire power
         icon: firePowerIcon,
         name: "Fire Power",
-        value: classInfo.firePower,
-        add: classInfo.firePowerAdd
+        value: tankClass.firePower,
+        add: tankClass.firePowerAdd
       }, {
         //fire rate
         icon: fireRateIcon,
         name: "Fire Rate",
-        value: classInfo.fireRate,
-        add: -1 * classInfo.fireRateAdd
+        value: tankClass.fireRate,
+        add: -1 * tankClass.fireRateAdd
       }, {
         //speed
         icon: speedIcon,
         name: "Speed",
-        value: classInfo.speed,
-        add: classInfo.speedAdd
+        value: tankClass.speed,
+        add: tankClass.speedAdd
       }, {
         //health
         icon: healthIcon,
         name: "Health",
-        value: classInfo.health,
-        add: classInfo.healthAdd
+        value: tankClass.health,
+        add: tankClass.healthAdd
       }
     ]
 
     return properties
-  }, [classInfo])
+  }, [tankClass])
 
   return (
     <Stack>
@@ -198,6 +93,211 @@ const PropertyPanel = ({ id }: { id: string | undefined }) => {
   )
 }
 
+const TankClassDetail = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [buyItem, setBuyItem] = useState(null);
+
+  const [state] = useGlobalContext();
+  const tankClass = state.tankClasses.find((tankClass: TankClassObject) => (
+    tankClass.id === Number(id)
+  ))
+
+  /* ----- actions ----- */
+  const handleBuy = async () => {
+    setBuyItem(tankClass)
+  }
+
+  // return to 404 page if item is not exist
+  if (!tankClass) {
+    if (state.tankClasses.length !== 0) {
+      navigate('/404')
+    }
+
+    return (<></>)
+  }
+
+  return (
+    <Layouts>
+      <ActionButton2 sx={{ m: "5px", mb: '10px' }}
+        onClick={() => { navigate(-1) }}
+      >
+        <ArrowBackIcon /> back
+      </ActionButton2>
+
+      <StyledPanel>
+        <SubPanel>
+          <Stack direction="column">
+            <Row>
+              <Typography variant="h4">
+                {tankClass.name}
+              </Typography>
+            </Row>
+
+            <Box sx={{
+              mt: 3,
+              marginInline: "auto",
+              height: { lg: "500px" }
+            }}>
+              <Box alt=""
+                component="img"
+                src={tankClass.image}
+                sx={{
+                  m: { md: "30px" },
+                  maxHeight: "450px",
+                  textAlign: "center",
+                  borderRadius: "20px",
+                  //   width: { md: "calc(100% - 100px)", xs: "100%" },
+                  maxWidth: { md: "calc(100% - 100px)", xs: "100%" },
+                }}
+              />
+            </Box>
+          </Stack>
+        </SubPanel>
+
+        <SubPanel>
+          <Stack direction="column">
+            <Stack direction="column">
+              <Typography variant="h5">Description</Typography>
+              <Typography>{tankClass.description}</Typography>
+            </Stack>
+
+            <Row sx={{ mt: "30px" }} justifyContent="start" spacing={4}>
+              <Typography>ID:</Typography>
+              <Typography>{tankClass.id}</Typography>
+            </Row>
+
+            <Row sx={{ pb: "20px" }} alignItems="end">
+              <Stack spacing={2} direction="column">
+                <Typography>Price : {tankClass.price} DFTL</Typography>
+                <ActionButton1 onClick={handleBuy}>Buy</ActionButton1>
+              </Stack>
+            </Row>
+
+            {/* Property */}
+            <Row sx={{ mt: "30px" }}>
+              <Typography variant="h5">Properties</Typography>
+            </Row>
+
+            <PropertyPanel id={id} />
+          </Stack>
+        </SubPanel>
+      </StyledPanel>
+
+      <Modal open={buyItem != null}
+        onClose={() => setBuyItem(null)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div>
+          <BuyPanel item={buyItem} type="tank"
+            onClose={() => { setBuyItem(null) }}
+          />
+        </div>
+      </Modal>
+    </Layouts>
+  )
+}
+
+const ItemClassDetail = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [buyItem, setBuyItem] = useState(null);
+
+  const [state] = useGlobalContext();
+  const itemClass = state.itemClasses.find((itemClass: ItemClassObject) => (
+    itemClass.id === Number(id)
+  ))
+
+  /* ----- actions ----- */
+  const handleBuy = async () => {
+    setBuyItem(itemClass)
+  }
+
+  // return to 404 page if item is not exist
+  if (!itemClass) {
+    if (state.itemClasses.length !== 0) {
+      navigate('/404')
+    }
+
+    return (<></>)
+  }
+
+  return (
+    <Layouts>
+      <ActionButton2 sx={{ m: "5px", mb: '10px' }}
+        onClick={() => { navigate(-1) }}
+      >
+        <ArrowBackIcon /> back
+      </ActionButton2>
+
+      <StyledPanel>
+        <SubPanel>
+          <Stack direction="column">
+            <Row>
+              <Typography variant="h4">
+                {itemClass.name}
+              </Typography>
+            </Row>
+
+            <Box sx={{
+              mt: 3,
+              marginInline: "auto",
+              height: { lg: "500px" }
+            }}>
+              <Box alt=""
+                component="img"
+                src={itemClass.image}
+                sx={{
+                  m: { md: "30px" },
+                  maxHeight: "450px",
+                  textAlign: "center",
+                  borderRadius: "20px",
+                  //   width: { md: "calc(100% - 100px)", xs: "100%" },
+                  maxWidth: { md: "calc(100% - 100px)", xs: "100%" },
+                }}
+              />
+            </Box>
+          </Stack>
+        </SubPanel>
+
+        <SubPanel>
+          <Stack direction="column">
+            <Stack direction="column">
+              <Typography variant="h5">Description</Typography>
+              <Typography>{itemClass.description}</Typography>
+            </Stack>
+
+            <Row sx={{ mt: "30px" }} justifyContent="start" spacing={4}>
+              <Typography>ID:</Typography>
+              <Typography>{itemClass.id}</Typography>
+            </Row>
+
+            <Row sx={{ pb: "20px" }} alignItems="end">
+              <Stack spacing={2} direction="column">
+                <Typography>Price : {itemClass.price} DFTL</Typography>
+                <ActionButton1 onClick={handleBuy}>Buy</ActionButton1>
+              </Stack>
+            </Row>
+          </Stack>
+        </SubPanel>
+      </StyledPanel>
+
+      <Modal open={buyItem != null}
+        onClose={() => setBuyItem(null)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div>
+          <BuyPanel item={buyItem} type="item"
+            onClose={() => { setBuyItem(null) }}
+          />
+        </div>
+      </Modal>
+    </Layouts>
+  )
+}
+
 const StyledPanel = styled("div")(({ theme }) => ({
   borderRadius: 12,
   backgroundColor: "#0000008f",
@@ -227,3 +327,5 @@ const Row = styled((props: any) => (
 ))(({ theme }) => ({
   paddingBottom: "7px"
 }))
+
+export { TankClassDetail, ItemClassDetail }

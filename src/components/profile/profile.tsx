@@ -16,6 +16,7 @@ import { EditProfile } from "./editpanel";
 import { ActionButton2 } from "../buttons";
 import { restApi } from "../../provider/restApi";
 import { useGlobalContext } from "../../provider";
+import { getSeed } from "utils/util";
 
 const linkIcons: any = {
   discord: discordIcon,
@@ -62,12 +63,6 @@ export const ProfilePanel = ({ address }) => {
     }
   }
 
-  const getSeed = () => {
-    const accountNum = Number(address) || 0
-    const zeroNumber = Number("0xffffffffffffffffffffffffffffffffffffffffff")
-    return Math.round(accountNum / zeroNumber * 10000000)
-  }
-
   return (
     <Stack direction="row"
       alignItems="center"
@@ -104,7 +99,7 @@ export const ProfilePanel = ({ address }) => {
             />
           ) : (
             // @ts-ignore
-            <Jazzicon diameter={100} seed={getSeed()} />
+            <Jazzicon diameter={100} seed={getSeed(address)} />
           )}
 
           {/* profile info */}

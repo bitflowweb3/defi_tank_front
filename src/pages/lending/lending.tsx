@@ -20,7 +20,7 @@ export const LendingPage = () => {
     setRendCount(renderCount + 10);
   }
 
-  const sortBy = useCallback((a: TankObject, b: TankObject) => {
+  const sortBy = useCallback((a: NftTankObject, b: NftTankObject) => {
     let res: boolean = true;
 
     switch (sort) {
@@ -60,9 +60,9 @@ export const LendingPage = () => {
   }, [sort])
 
   const myTanks = useMemo(() => {
-    let items = state.tankItems.filter((tankItem: TankObject) => (
+    let items = state.tankItems.filter((tankItem: NftTankObject) => (
       tankItem.borrower === ""
-    )).filter((item: TankObject) => (
+    )).filter((item: NftTankObject) => (
       item.name?.toLowerCase().indexOf(filter.toLowerCase().trim()) > -1
     )).sort(sortBy)
 
@@ -131,7 +131,7 @@ export const LendingPage = () => {
         loader={<Typography>Loading...</Typography>}
       >
         <Grid container spacing={2} sx={{ mt: 1 }}>
-          {myTanks.map((tankClass: TankObject, key: any) => (
+          {myTanks.map((tankClass: NftTankObject, key: any) => (
             <Grid key={key} item xs={12} sm={6} md={6} lg={4} xl={2.4}>
               <TankItemCard item={tankClass} />
             </Grid>

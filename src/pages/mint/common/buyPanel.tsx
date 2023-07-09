@@ -8,12 +8,13 @@ import { useGlobalContext } from "../../../provider";
 import { ActionLoadingButton1 } from "../../../components/buttons";
 
 interface ParamObject {
-  item: ClassesObject
+  item: TankClassObject
   onClose: any
+  type: string
 }
 
-export const BuyPanel = ({ item, onClose }: ParamObject) => {
-  const [state, { mintNFT }] = useGlobalContext()
+export const BuyPanel = ({ item, onClose, type }: ParamObject) => {
+  const [state, { mintTank }] = useGlobalContext()
   const [loading, setLoading] = useState<boolean>(false)
   const [paymentToken, setPaymentToken] = useState<any>(buyOption[0])
 
@@ -32,14 +33,19 @@ export const BuyPanel = ({ item, onClose }: ParamObject) => {
 
   const handleBuy = async () => {
     try {
+      let tx: any;
       setLoading(true)
-      let tx = await mintNFT(item?.id, item?.price)
+
+      if (type === 'tank') {
+        tx = await mintTank(item?.id, item?.price)
+      } else {
+        tx = await mintTank(item?.id, item?.price)
+      }
+
       await tx.wait()
-
-      onClose()
       tips("success", tx.hash)
-
       setLoading(false)
+      onClose()
     } catch (err) {
       setLoading(false)
       console.log("error", err.message);

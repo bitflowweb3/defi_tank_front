@@ -7,7 +7,7 @@ import { Stack, Box, CardMedia, CardContent, CardActions } from "@mui/material"
 import { IconButton, Typography, LinearProgress, linearProgressClasses } from "@mui/material"
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
-import { ItemCard } from "../cards";
+import { CardContainer } from "../cards";
 import { restApi } from '../../provider/restApi';
 import { useGlobalContext } from '../../provider';
 import { tips, getSubString } from '../../utils/util';
@@ -20,7 +20,7 @@ enum ItemType {
 }
 
 interface TankCardProps {
-  item: TankObject
+  item: NftTankObject
 }
 
 // const resizeFile: any = (file: any) => (
@@ -96,11 +96,11 @@ export const TankItemCard = ({ item }: TankCardProps) => {
   }
 
   const handleDetail = () => {
-    navigate("/detail/" + item.id)
+    navigate("/tank-detail/" + item.id)
   }
 
   return (
-    <ItemCard>
+    <CardContainer>
       <Stack direction="row"
         alignItems="center"
         justifyContent="space-between"
@@ -186,7 +186,7 @@ export const TankItemCard = ({ item }: TankCardProps) => {
           </Stack>
         )}
       </CardActions>
-    </ItemCard>
+    </CardContainer>
   )
 }
 

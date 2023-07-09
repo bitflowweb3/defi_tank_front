@@ -23,7 +23,7 @@ export const UserPage = () => {
     setRendCount(renderCount + 10);
   }
 
-  const typeFilter = useCallback((item: TankObject) => {
+  const typeFilter = useCallback((item: NftTankObject) => {
     switch (type) {
       case "All":
         return true
@@ -37,12 +37,12 @@ export const UserPage = () => {
   }, [type, tempAddr])
 
   const myTanks = useMemo(() => {
-    let items = state.tankItems.filter((tankItem: TankObject) => {
+    let items = state.tankItems.filter((tankItem: NftTankObject) => {
       const ownerFlag = tankItem.owner === tempAddr
       const borrowerFlag = tankItem.borrower === tempAddr
 
       return ownerFlag || borrowerFlag
-    }).filter((item: TankObject) => {
+    }).filter((item: NftTankObject) => {
       return item.name.indexOf(filter.toLowerCase().trim()) > -1
     }).filter(typeFilter)
 
@@ -107,7 +107,7 @@ export const UserPage = () => {
         loader={<Typography>Loading...</Typography>}
       >
         <Grid container spacing={2} sx={{ mt: 1 }}>
-          {myTanks.map((tankItem: TankObject, key: number) => (
+          {myTanks.map((tankItem: NftTankObject, key: number) => (
             <Grid key={key} item
               xs={12} sm={6} md={6} lg={4} xl={2.4}
             >

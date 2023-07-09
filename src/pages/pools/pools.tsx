@@ -21,7 +21,7 @@ export const PoolsPage = () => {
     setRendCount(renderCount + 15)
   }
 
-  const sortBy = useCallback((a: TankObject, b: TankObject) => {
+  const sortBy = useCallback((a: NftTankObject, b: NftTankObject) => {
     var res: boolean = true
 
     switch (sort) {
@@ -49,7 +49,7 @@ export const PoolsPage = () => {
   }, [sort])
 
   const tankItems = useMemo(() => {
-    let items = state.tankItems.filter((item: TankObject) => (
+    let items = state.tankItems.filter((item: NftTankObject) => (
       item.name?.toLowerCase().indexOf(filter.toLowerCase().trim()) > -1
     )).sort(sortBy)
 
@@ -150,7 +150,7 @@ export const PoolsPage = () => {
           dataLength={tankItems.length}
           loader={<Typography>Loading...</Typography>}
         >
-          {tankItems.map((tankItem: TankObject, key: number) => (
+          {tankItems.map((tankItem: NftTankObject, key: number) => (
             <PoolItem key={key}
               handleExpand={handleExpand}
               expanded={expanded}

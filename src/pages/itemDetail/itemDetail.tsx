@@ -22,18 +22,103 @@ enum ItemType {
   "onUserMine"
 }
 
-export const ItemDetail = () => {
+const PropertyPanel = ({ id }: { id: string | undefined }) => {
+  const [state] = useGlobalContext();
+
+  const item: NftTankObject = state.tankItems.find((tankItem: NftTankObject) => (
+    Number(tankItem.id) === Number(id)
+  ))
+
+  const classInfo: TankClassObject = state.tankClasses.find((tankClass: TankClassObject) => (
+    tankClass.id === item?.classType
+  ))
+
+  const properties = useMemo(() => {
+    const properties = [
+      {
+        // fire power
+        icon: firePowerIcon,
+        name: "Fire Power",
+        value: item.firePower,
+        add: classInfo.firePowerAdd
+      }, {
+        //fire rate
+        icon: fireRateIcon,
+        name: "Fire Rate",
+        value: item.fireRate,
+        add: -1 * classInfo.fireRateAdd
+      }, {
+        //speed
+        icon: speedIcon,
+        name: "Speed",
+        value: item.speed,
+        add: classInfo.speedAdd
+      }, {
+        //health
+        icon: healthIcon,
+        name: "Health",
+        value: item.health,
+        add: classInfo.healthAdd
+      }
+    ]
+
+    return properties
+  }, [item, classInfo])
+
+  return (
+    <Stack>
+      {properties.map((property: any, key: number) => (
+        <Stack key={key}
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{
+            borderRadius: 2,
+            m: 0, mb: 1, p: 1.5,
+            borderColor: "#444",
+            border: "1px solid",
+          }}
+        >
+          <Stack direction="row"
+            alignItems="center"
+            justifyContent="flex-start"
+          >
+            <Box alt=""
+              component="img"
+              src={property.icon}
+              sx={{
+                pr: 2,
+                width: "40px",
+                textAlign: "center",
+              }}
+            />
+
+            <Typography>
+              {property.name}
+            </Typography>
+          </Stack>
+
+          <Typography>
+            {property.value}{property.add > 0 ? "(+" : "("}{property.add + ")"}
+          </Typography>
+        </Stack>
+      ))}
+    </Stack>
+  )
+}
+
+const TankDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [state, { upgradeNFT }] = useGlobalContext();
 
   const [openNameModal, setOpenaNameModal] = useState(false);
 
-  const item = state.tankItems.find((tankItem: TankObject) => (
+  const item = state.tankItems.find((tankItem: NftTankObject) => (
     Number(tankItem.id) === Number(id)
   ))
 
-  const classInfo = state.tankClasses.find((tankClass: ClassesObject) => (
+  const classInfo = state.tankClasses.find((tankClass: TankClassObject) => (
     tankClass.id === item?.classType
   ))
 
@@ -271,91 +356,6 @@ export const ItemDetail = () => {
   )
 }
 
-const PropertyPanel = ({ id }: { id: string | undefined }) => {
-  const [state] = useGlobalContext();
-
-  const item: TankObject = state.tankItems.find((tankItem: TankObject) => (
-    Number(tankItem.id) === Number(id)
-  ))
-
-  const classInfo: ClassesObject = state.tankClasses.find((tankClass: ClassesObject) => (
-    tankClass.id === item?.classType
-  ))
-
-  const properties = useMemo(() => {
-    const properties = [
-      {
-        // fire power
-        icon: firePowerIcon,
-        name: "Fire Power",
-        value: item.firePower,
-        add: classInfo.firePowerAdd
-      }, {
-        //fire rate
-        icon: fireRateIcon,
-        name: "Fire Rate",
-        value: item.fireRate,
-        add: -1 * classInfo.fireRateAdd
-      }, {
-        //speed
-        icon: speedIcon,
-        name: "Speed",
-        value: item.speed,
-        add: classInfo.speedAdd
-      }, {
-        //health
-        icon: healthIcon,
-        name: "Health",
-        value: item.health,
-        add: classInfo.healthAdd
-      }
-    ]
-
-    return properties
-  }, [item, classInfo])
-
-  return (
-    <Stack>
-      {properties.map((property: any, key: number) => (
-        <Stack key={key}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{
-            borderRadius: 2,
-            m: 0, mb: 1, p: 1.5,
-            borderColor: "#444",
-            border: "1px solid",
-          }}
-        >
-          <Stack direction="row"
-            alignItems="center"
-            justifyContent="flex-start"
-          >
-            <Box alt=""
-              component="img"
-              src={property.icon}
-              sx={{
-                pr: 2,
-                width: "40px",
-                textAlign: "center",
-              }}
-            />
-
-            <Typography>
-              {property.name}
-            </Typography>
-          </Stack>
-
-          <Typography>
-            {property.value}{property.add > 0 ? "(+" : "("}{property.add + ")"}
-          </Typography>
-        </Stack>
-      ))}
-    </Stack>
-  )
-}
-
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
   borderRadius: 10,
@@ -398,3 +398,5 @@ const Row = styled((props: any) => (
 ))(({ theme }) => ({
   paddingBottom: "7px"
 }))
+
+export { TankDetail }

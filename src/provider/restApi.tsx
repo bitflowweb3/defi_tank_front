@@ -59,6 +59,17 @@ export const restApi = {
     return result.data
   },
 
+  // base info
+  getBaseClasses: async () => {
+    const result = await axios.post("/api/platform/classes")
+    return result.data
+  },
+
+  getAllNfts: async () => {
+    const result = await axios.post("/api/platform/allNfts")
+    return result.data
+  },
+
   // tank apis
   lend: async (id: string, to: string, signature: string) => {
     const params = { id, to, signature }
@@ -79,16 +90,6 @@ export const restApi = {
   },
 
   // data caching apis
-  getTankClasses: async () => {
-    const result = await axios.post("/api/tanks/classes")
-    return result.data
-  },
-
-  getTankItems: async () => {
-    const result = await axios.post("/api/tanks/all-tanks")
-    return result.data
-  },
-
   getUpgradeSignature: async (id: string) => {
     const params = { id: id }
     const result = await axios.post("/api/tanks/get-upgradesign", params)

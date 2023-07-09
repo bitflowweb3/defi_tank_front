@@ -1,7 +1,7 @@
 import { Card } from "@mui/material"
 import { styled } from '@mui/material/styles';
 
-export const ItemCard = styled(Card)(({
+export const CardContainer = styled(Card)(({
   maxWidth: "250px",
   margin: "auto",
   padding: "1.5rem 1rem 1rem",
@@ -9,5 +9,10 @@ export const ItemCard = styled(Card)(({
   backgroundColor: '#0a0300fc',
   borderWidth: '3px',
   borderStyle: 'solid',
-  borderImage: 'linear-gradient(to top, #6c3200, #ff570000) 1'
+  borderImage: 'linear-gradient(to top, #6c3200, #ff570000) 1',
+
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
 }))

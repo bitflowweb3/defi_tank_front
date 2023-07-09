@@ -8,7 +8,7 @@ import { Box, TextField, Stack, Paper, IconButton, Typography } from "@mui/mater
 import userTempCoverImg from "../../assets/image/tank55.webp";
 import { useGlobalContext } from "../../provider";
 import { restApi } from "../../provider/restApi";
-import { tips } from "../../utils/util";
+import { getSeed, tips } from "../../utils/util";
 
 interface PropsObject {
   profile: UserObject
@@ -17,7 +17,7 @@ interface PropsObject {
   setModal: any
 }
 
-const Item = styled(Paper)(({ theme }) => ({
+const ItemContainer = styled(Paper)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     flexDirection: "column",
   },
@@ -130,7 +130,7 @@ export const EditProfile = (props: PropsObject) => {
         console.log(err.message)
       }
     }
-  };
+  }
 
   const HandleCoverImageChange = async (event: any) => {
     const newImage = event.target?.files?.[0]
@@ -149,18 +149,12 @@ export const EditProfile = (props: PropsObject) => {
         console.log(err.message)
       }
     }
-  };
-
-  const getSeed = () => {
-    const accountNum = Number(address) || 0
-    const zeroNumber = Number("0xffffffffffffffffffffffffffffffffffffffffff")
-    return Math.round(accountNum / zeroNumber * 10000000)
   }
 
   return (
     <Box sx={style} style={{ borderRadius: '12px' }}>
       <Stack spacing={2}>
-        <Item>
+        <ItemContainer>
           <Stack alignItems="center" direction="column">
             <Box sx={{ position: "relative" }}>
               {image ? (
@@ -177,7 +171,7 @@ export const EditProfile = (props: PropsObject) => {
                 />
               ) : (
                 // @ts-ignore
-                <Jazzicon diameter={100} seed={getSeed()} />
+                <Jazzicon diameter={100} seed={getSeed(address)} />
               )}
 
               <IconButton color="primary"
@@ -199,9 +193,9 @@ export const EditProfile = (props: PropsObject) => {
               <Typography>Please Set Image</Typography>
             )}
           </Stack>
-        </Item>
+        </ItemContainer>
 
-        <Item>
+        <ItemContainer>
           <Stack alignItems="center" direction="column" sx={{ flex: 1 }}>
             <Box sx={{ position: "relative", width: "100%" }}>
               <Box alt="" component="img"
@@ -230,9 +224,9 @@ export const EditProfile = (props: PropsObject) => {
               <Typography>Please Set CoverImage</Typography>
             )}
           </Stack>
-        </Item>
+        </ItemContainer>
 
-        <Item>
+        <ItemContainer>
           <TextField label="Name" required
             onChange={(e) => setName((e.target.value).trim())}
             sx={inputstyle}
@@ -245,26 +239,26 @@ export const EditProfile = (props: PropsObject) => {
             type={"email"}
             value={email}
           />
-        </Item>
+        </ItemContainer>
 
-        <Item>
+        <ItemContainer>
           <TextField label="Password" required
             onChange={(e) => setPassword((e.target.value).trim())}
             type={"password"}
             value={password}
             sx={inputstyle}
           />
-        </Item>
+        </ItemContainer>
 
-        <Item>
+        <ItemContainer>
           <TextField label="Description"
             onChange={(e) => setDesc(e.target.value)}
             sx={inputstyle}
             value={desc}
           />
-        </Item>
+        </ItemContainer>
 
-        <Item>
+        <ItemContainer>
           <TextField label="discord"
             onChange={(e) => setLinks({ ...links, discord: e.target.value })}
             value={links.discord}
@@ -288,9 +282,9 @@ export const EditProfile = (props: PropsObject) => {
             value={links.default}
             sx={inputstyle}
           />
-        </Item>
+        </ItemContainer>
 
-        <Item>
+        <ItemContainer>
           <LoadingButton color="success"
             onClick={HandleSubmit}
             loading={loading}
@@ -303,7 +297,7 @@ export const EditProfile = (props: PropsObject) => {
           >
             Submit
           </LoadingButton>
-        </Item>
+        </ItemContainer>
       </Stack>
     </Box>
   )
@@ -323,7 +317,7 @@ const style = {
   height: "80%",
   overflow: "auto",
   bordreRadius: '10px'
-};
+}
 
 const inputstyle = {
   width: "100%",

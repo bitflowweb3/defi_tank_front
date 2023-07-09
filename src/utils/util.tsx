@@ -96,6 +96,12 @@ export const byte32code = (code: string): boolean => {
   }
 }
 
+export const getSeed = (address: string) => {
+  const accountNum = Number(address) || 0
+  const zeroNumber = Number("0xffffffffffffffffffffffffffffffffffffffffff")
+  return Math.round(accountNum / zeroNumber * 10000000)
+}
+
 
 /**
  * change data type from number to BigNum
