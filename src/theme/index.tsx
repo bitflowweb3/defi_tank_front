@@ -19,7 +19,13 @@ const theme = createTheme({
 })
 
 const MuiProvider = ({ children }: any) => {
-  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+
+  return (
+    // @ts-ignore
+    <ThemeProvider theme={theme}>
+      {children}
+    </ThemeProvider>
+  )
 }
 
 export { MuiProvider }

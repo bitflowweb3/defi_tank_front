@@ -200,9 +200,9 @@ const GlobalProvider = ({ children }: any) => {
       const tempDatas = await restApi.getBaseClasses()
 
       if (tempDatas.status) {
-        dispatch({ type: "tankClasses", payload: tempDatas.tankClasses })
-        dispatch({ type: "itemClasses", payload: tempDatas.itemClasses })
-        dispatch({ type: "guildRules", payload: tempDatas.guildRules })
+        dispatch({ type: "tankClasses", payload: tempDatas.data })
+        // dispatch({ type: "itemClasses", payload: tempDatas.itemClasses })
+        // dispatch({ type: "guildRules", payload: tempDatas.guildRules })
       }
     } catch (err: any) {
       console.log("provider/tankClasses", err.message)

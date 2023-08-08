@@ -61,7 +61,7 @@ export const restApi = {
 
   // base info
   getBaseClasses: async () => {
-    const result = await axios.post("/api/platform/classes")
+    const result = await axios.post("/api/tanks/classes")
     return result.data
   },
 
