@@ -1,119 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 
-import './notification.scss'
+import './notification.scss';
 import { useGlobalContext } from 'provider';
 import { restApi } from 'provider/restApi';
+import { apiNotification } from 'utils/services';
 
-export const Notification = () => {
-  const [state, { dispatch, updateNofitication }] = useGlobalContext()
-
-  const [showNotifi, setshowNotifi] = useState<Boolean>(false);
-  const [notifications, setotifications] = useState<NotifiObject[]>([])
-
-  useEffect(() => {
-    setotifications(state.notifications)
-  }, [state.notifications])
-
-  const closeNotifi = () => { setshowNotifi(false) }
-  const openNotifi = () => { setshowNotifi(true) }
-
-  const readAll = async () => {
-    try {
-      if (!state.notifications.length) {
-        return
-      }
-
-      dispatch({
-        type: "loading",
-        payload: true
-      })
-
-      for (let i = 0; i < notifications.length; i++) {
-        const notifi: NotifiObject = notifications[i]
-        await restApi.readAlert(notifi._id)
-
-      }
-
-      await updateNofitication()
-
-      dispatch({
-        type: "loading",
-        payload: false
-      })
-    } catch (err) {
-      console.log(err.message)
-      dispatch({
-        type: "loading",
-        payload: false
-      })
-    }
-  }
-
-  return (
-    !!notifications?.length && (
-      <div className='notification-wrapper ml-5 mr-30'>
-        <div className="alert-badge" onClick={openNotifi}>
-          {notifications.length}
-        </div>
-
-        <div className={`notifi-cotainer ${!showNotifi && ('notifi-hide')}`}>
-          <div onClick={closeNotifi}
-            className="notifi-overlay"
-          />
-
-          <div className="notifi-body">
-            <div className='notifi-header'>
-              <CloseIcon onClick={closeNotifi}
-                className='notifi-close'
-              />
-
-              <div onClick={readAll}
-                className='header-title'
-              >
-                Clear all notifications
-              </div>
-            </div>
-
-            <div className='notifi-count'>
-              Notifications ({notifications.length})
-            </div>
-
-            <div className='notifi-items'>
-              {notifications.map((notifi: NotifiObject, key: number) => (
-                <NotifiItem notifi={notifi} key={key} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div >
-    )
-  )
+interface NotifiitemProps {
+  notifi: NotifiObject
+  getNotifications: any
 }
 
-const NotifiItem = ({ notifi }: { notifi: NotifiObject }) => {
-  const [state, { dispatch, updateNofitication }] = useGlobalContext()
+const NotifiItem = ({ notifi, getNotifications }: NotifiitemProps) => {
+  const [state, { dispatch }] = useGlobalContext();
+  const [notifiTime, setNotifiTime] = useState<string>('');
+
+  useEffect(() => {
+    try {
+      if (!notifi?.created) {
+        throw new Error("invalid time format");
+      }
+
+      let tempData = new Date(notifi.created);
+      let tempStr = tempData.toLocaleDateString();
+      setNotifiTime(tempStr.replaceAll('/', ' / '));
+    } catch (err) {
+      setNotifiTime('');
+    }
+  }, [notifi])
 
   const readAlert = async () => {
     try {
-      dispatch({
-        type: "loading",
-        payload: true
-      })
+      dispatch({ type: "loading", payload: true })
+      await restApi.readAlert(notifi._id, state.account)
+      await getNotifications()
 
-      await restApi.readAlert(notifi._id)
-      await updateNofitication()
-
-      dispatch({
-        type: "loading",
-        payload: false
-      })
+      dispatch({ type: "loading", payload: false })
     } catch (err) {
-      console.log(err.message)
-      dispatch({
-        type: "loading",
-        payload: false
-      })
+      apiNotification(err);
+      dispatch({ type: "loading", payload: false })
     }
   }
 
@@ -128,12 +54,91 @@ const NotifiItem = ({ notifi }: { notifi: NotifiObject }) => {
       </div>
 
       <div className="notifi-item-content">
-        {notifi.content}
+        {notifi.description}
       </div>
 
       <div className="notifi-item-time">
-        {notifi.time}
+        {notifiTime}
       </div>
     </div>
   )
 }
+
+const Notification = () => {
+  const [state, { dispatch }] = useGlobalContext();
+  const [notifications, setotifications] = useState<NotifiObject[]>([]);
+  const [showNotifi, setshowNotifi] = useState<Boolean>(false);
+  const closeNotifi = () => { setshowNotifi(false) };
+  const openNotifi = () => { setshowNotifi(true) };
+
+  useEffect(() => {
+    getNotifications();
+  }, [state.walletStatus])
+
+  const getNotifications = async () => {
+    try {
+      if (state.walletStatus !== 2) {
+        throw new Error("please wallet connect")
+      }
+
+      let tempResult = await restApi.getAlert(state.account);
+      setotifications(tempResult);
+    } catch (err) {
+      setotifications([]);
+    }
+  }
+
+  const readAll = async () => {
+    try {
+      dispatch({ type: "loading", payload: true });
+      for (let i = 0; i < notifications.length; i++) {
+        const notifi: NotifiObject = notifications[i];
+        await restApi.readAlert(notifi._id, state.account);
+      }
+
+      await getNotifications();
+      dispatch({ type: "loading", payload: false });
+    } catch (err) {
+      apiNotification(err);
+      dispatch({ type: "loading", payload: false });
+    }
+  }
+
+  return (
+    !!notifications?.length && (
+      <div className='notification-wrapper'>
+        <div className="alert-badge" onClick={openNotifi}>
+          {notifications.length}
+        </div>
+
+        <div className={`notifi-cotainer ${!showNotifi && ('notifi-hide')}`}>
+          <div className="notifi-overlay" onClick={closeNotifi} />
+
+          <div className="notifi-body">
+            <div className='notifi-header'>
+              <CloseIcon className='notifi-close' onClick={closeNotifi} />
+
+              <div className='header-title' onClick={readAll}>
+                Clear all notifications
+              </div>
+            </div>
+
+            <div className='notifi-count'>
+              Notifications ({notifications.length})
+            </div>
+
+            <div className='notifi-items'>
+              {notifications.map((notifi: NotifiObject, key: number) => (
+                <NotifiItem notifi={notifi} key={key}
+                  getNotifications={getNotifications}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div >
+    )
+  )
+}
+
+export { Notification }

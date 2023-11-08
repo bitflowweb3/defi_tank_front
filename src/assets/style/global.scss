@@ -71,21 +71,29 @@ body {
   text-overflow: ellipsis;
 }
 
-h1 {
-  font-size: 2em;
-  font-weight: bold;
-}
+// h1 {
+//   font-size: 2em;
+//   font-weight: bold;
+// }
 
-h2 {
-  font-size: 1.5em;
-  font-weight: bold;
-}
+// h2 {
+//   font-size: 1.5em;
+//   font-weight: bold;
+// }
 
-h3 {
-  font-size: 1.17em;
-  font-weight: bold;
-}
+// h3 {
+//   font-size: 1.17em;
+//   font-weight: bold;
+// }
 
-.justify-between {
-  justify-content: space-between;
+.basetap-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  .MuiTabPanel-root {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
 }

@@ -2,7 +2,7 @@ import { LoadingButton } from '@mui/lab';
 import { styled } from '@mui/material/styles';
 import { Button, ButtonProps } from '@mui/material';
 
-export const HeaderButton = styled(Button)<ButtonProps>(({ theme }) => ({
+const HeaderButton = styled(Button)<ButtonProps>(({ theme }) => ({
     color: theme.palette.primary.main,
     backgroundColor: theme.palette.primary.light,
     paddingInline: "15px",
@@ -10,10 +10,10 @@ export const HeaderButton = styled(Button)<ButtonProps>(({ theme }) => ({
     fontWeight: 'bold',
     '&:hover': {
         backgroundColor: theme.palette.primary.dark,
-    },
-}));
+    }
+}))
 
-export const HeaderLink = styled("a")(({ theme }) => ({
+const HeaderLink = styled("a")(({ theme }) => ({
     color: theme.palette.primary.main,
     border: 'none',
     backgroundColor: theme.palette.primary.light,
@@ -29,10 +29,10 @@ export const HeaderLink = styled("a")(({ theme }) => ({
     '&:hover': {
         backgroundColor: theme.palette.secondary.main,
         border: 'none',
-    },
-}));
+    }
+}))
 
-export const ActionButton1 = styled(Button)<ButtonProps>(({ theme }) => ({
+const ActionButton1 = styled(Button)<ButtonProps>(({ theme }) => ({
     color: theme.palette.primary.main,
     border: 'none',
     backgroundColor: theme.palette.primary.light,
@@ -43,11 +43,10 @@ export const ActionButton1 = styled(Button)<ButtonProps>(({ theme }) => ({
     '&:hover': {
         backgroundColor: theme.palette.secondary.main,
         border: 'none',
-    },
-}));
+    }
+}))
 
-
-export const ActionButton2 = styled(Button)<ButtonProps>(({ theme }) => ({
+const ActionButton2 = styled(Button)<ButtonProps>(({ theme }) => ({
     color: theme.palette.primary.main,
     backgroundColor: theme.palette.primary.dark,
     border: '1px solid white',
@@ -58,10 +57,10 @@ export const ActionButton2 = styled(Button)<ButtonProps>(({ theme }) => ({
     '&:hover': {
         backgroundColor: theme.palette.secondary.dark,
         border: '1px solid grey',
-    },
-}));
+    }
+}))
 
-export const DownloadButton = styled(Button)<ButtonProps>(({ theme }) => ({
+const DownloadButton = styled(Button)<ButtonProps>(({ theme }) => ({
     color: 'white',
     cursor: 'pointer',
     width: '70px',
@@ -71,10 +70,9 @@ export const DownloadButton = styled(Button)<ButtonProps>(({ theme }) => ({
     padding: '1rem 3rem',
     boxSizing: 'border-box',
     margin: '8px 1rem'
-}));
+}))
 
-
-export const ActionLoadingButton1 = styled(LoadingButton)<any>(({ theme }) => ({
+const ActionLoadingButton1 = styled(LoadingButton)<any>(({ theme }) => ({
     color: theme.palette.primary.main,
     border: 'none',
     backgroundColor: theme.palette.primary.light,
@@ -86,5 +84,7 @@ export const ActionLoadingButton1 = styled(LoadingButton)<any>(({ theme }) => ({
     '&:hover': {
         backgroundColor: theme.palette.secondary.main,
         border: 'none',
-    },
-}));
+    }
+}))
+
+export { HeaderButton, HeaderLink, ActionButton1, ActionButton2, DownloadButton, ActionLoadingButton1 }

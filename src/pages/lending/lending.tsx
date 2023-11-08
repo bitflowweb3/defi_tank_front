@@ -2,11 +2,13 @@ import React from "react";
 import Select from "@mui/material/Select";
 import { useState, useMemo, useCallback } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Box, Stack, TextField, FormControl, InputLabel, MenuItem, Grid, Typography } from "@mui/material";
+import { Stack, TextField, FormControl, InputLabel, MenuItem, Grid, Typography } from "@mui/material";
 
 import { useGlobalContext } from "provider";
 import { TankItemCard } from "components/tankCard";
-import { Layouts } from "components/layouts/layouts";
+import { GlobalSpacing, Layouts } from "components/layouts/layouts";
+import { ScrollWrapper } from "components/scrollbar";
+import { menuStyle } from "components/styles";
 
 export const LendingPage = () => {
   const [state] = useGlobalContext();
@@ -14,11 +16,6 @@ export const LendingPage = () => {
   const [filter, setFilter] = useState("");
   const [renderCount, setRendCount] = useState(10);
   const [hasMore, setHasMore] = useState<boolean>(true);
-
-  const fetchMore = () => {
-    console.log("renderCount", renderCount);
-    setRendCount(renderCount + 10);
-  }
 
   const sortBy = useCallback((a: NftTankObject, b: NftTankObject) => {
     let res: boolean = true;
@@ -74,76 +71,64 @@ export const LendingPage = () => {
     return renderItems
   }, [state.account, state.tankItems, filter, sort, renderCount])
 
+  const fetchMore = () => {
+    setRendCount(renderCount + 10);
+  }
+
+  const onChangeFilter = ({ target }: any) => {
+    setFilter(target.value)
+  }
+
+  const onChangeSort = ({ target }: any) => {
+    setSort(target.value)
+  }
+
   return (
     <Layouts>
-      <Stack
-        marginTop={"30px"}
-        spacing={2}
-        direction={{ xs: "column", sm: "row" }}
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <TextField label="Search"
-          variant="outlined" value={filter}
-          onChange={(e: any) => setFilter(e.target.value)}
-          sx={{
-            flex: 1,
-            maxWidth: "600px",
-            width: { xs: "100%" },
-            backgroundColor: '#00000075',
-            borderRadius: '5px'
-          }}
-        />
-
-        <FormControl size="medium"
-          sx={{
-            flex: 1,
-            maxWidth: "400px",
-            width: { xs: "100%" },
-            backgroundColor: '#00000075',
-            borderRadius: '5px'
-          }}
+      <GlobalSpacing className="flex-1 flex flex-col gap-20">
+        <Stack spacing={2}
+          direction={{ xs: "column", sm: "row" }}
+          className="items-center justify-between"
         >
-          <InputLabel id="sort-select">Sort</InputLabel>
-          <Select label="Sort"
-            labelId="sort-select" value={sort}
-            onChange={(e: any) => setSort(e.target.value)}
+          <TextField label="Search" variant="outlined"
+            value={filter} onChange={onChangeFilter}
+            className="flex-1 max-w-600 w-ful bg-inputBg rounded-5"
+          />
+
+          <FormControl size="medium" className="flex-1 max-w-400 w-ful bg-inputBg rounded-5">
+            <InputLabel id="sort-select">Sort</InputLabel>
+            <Select label="Sort" labelId="sort-select" value={sort} onChange={onChangeSort}>
+              <MenuItem style={menuStyle} value=""><em>None</em></MenuItem>
+              <MenuItem style={menuStyle} value="energyHL">Energy(High-Low)</MenuItem>
+              <MenuItem style={menuStyle} value="energyLH">Energy(Low-High)</MenuItem>
+              <MenuItem style={menuStyle} value="speedHL">Speed(High-Low)</MenuItem>
+              <MenuItem style={menuStyle} value="speedLH">Speed(Low-High)</MenuItem>
+              <MenuItem style={menuStyle} value="healthHL">Health(High-Low)</MenuItem>
+              <MenuItem style={menuStyle} value="healthLH">Health(Low-High)</MenuItem>
+              <MenuItem style={menuStyle} value="fireRateHL">FireRate(High-Low)</MenuItem>
+              <MenuItem style={menuStyle} value="fireRateLH">FireRate(Low-High)</MenuItem>
+              <MenuItem style={menuStyle} value="firePowerHL">FirePower(High-Low)</MenuItem>
+              <MenuItem style={menuStyle} value="firePowerLH">FirePower(Low-High)</MenuItem>
+            </Select>
+          </FormControl>
+        </Stack>
+
+        <ScrollWrapper id="tanklending-container">
+          <InfiniteScroll next={fetchMore}
+            scrollableTarget="tanklending-container"
+            hasMore={hasMore} dataLength={myTanks.length}
+            loader={<Typography>Loading...</Typography>}
           >
-            <MenuItem style={menuStyle} value=""><em>None</em></MenuItem>
-            <MenuItem style={menuStyle} value="energyHL">Energy(High-Low)</MenuItem>
-            <MenuItem style={menuStyle} value="energyLH">Energy(Low-High)</MenuItem>
-            <MenuItem style={menuStyle} value="speedHL">Speed(High-Low)</MenuItem>
-            <MenuItem style={menuStyle} value="speedLH">Speed(Low-High)</MenuItem>
-            <MenuItem style={menuStyle} value="healthHL">Health(High-Low)</MenuItem>
-            <MenuItem style={menuStyle} value="healthLH">Health(Low-High)</MenuItem>
-            <MenuItem style={menuStyle} value="fireRateHL">FireRate(High-Low)</MenuItem>
-            <MenuItem style={menuStyle} value="fireRateLH">FireRate(Low-High)</MenuItem>
-            <MenuItem style={menuStyle} value="firePowerHL">FirePower(High-Low)</MenuItem>
-            <MenuItem style={menuStyle} value="firePowerLH">FirePower(Low-High)</MenuItem>
-          </Select>
-        </FormControl>
-      </Stack>
-
-      <InfiniteScroll
-        next={fetchMore}
-        hasMore={hasMore}
-        dataLength={myTanks.length}
-        loader={<Typography>Loading...</Typography>}
-      >
-        <Grid container spacing={2} sx={{ mt: 1 }}>
-          {myTanks.map((tankClass: NftTankObject, key: any) => (
-            <Grid key={key} item xs={12} sm={6} md={6} lg={4} xl={2.4}>
-              <TankItemCard item={tankClass} />
+            <Grid container spacing={2}>
+              {myTanks.map((tankClass: NftTankObject, key: any) => (
+                <Grid key={key} item xs={12} sm={6} md={6} lg={4} xl={3}>
+                  <TankItemCard item={tankClass} />
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
-      </InfiniteScroll>
+          </InfiniteScroll>
+        </ScrollWrapper>
+      </GlobalSpacing>
     </Layouts>
-  );
-}
-
-const menuStyle = {
-  padding: '0.6rem 1rem',
-  backgroundColor: '#000000a8',
-  borderBottom: '1px solid #222'
+  )
 }

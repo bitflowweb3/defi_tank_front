@@ -2,17 +2,19 @@ import React from 'react'
 import { useMemo } from "react";
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-// import Resizer from "react-image-file-resizer";
-import { Stack, Box, CardMedia, CardContent, CardActions } from "@mui/material"
-import { IconButton, Typography, LinearProgress, linearProgressClasses } from "@mui/material"
+import { IconButton, Typography } from "@mui/material";
+import { Stack, Box, CardMedia, CardContent, CardActions } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { CardContainer } from "../cards";
 import { restApi } from '../../provider/restApi';
 import { useGlobalContext } from '../../provider';
-import { tips, getSubString } from '../../utils/util';
+import { tips, textEllipsis } from '../../utils/util';
 import { ActionButton1, ActionButton2 } from "../buttons";
+import { BorderLinearProgress, ChampionBadgeContainer } from 'components/styles';
+import { apiNotification } from 'utils/services';
 
+import championBadge from "assets/image/champion-badge.png"
 
 enum ItemType {
   "onUser",
@@ -23,75 +25,58 @@ interface TankCardProps {
   item: NftTankObject
 }
 
-// const resizeFile: any = (file: any) => (
-//   new Promise((resolve) => {
-//     Resizer.imageFileResizer(
-//       file, 300, 300, "JPEG", 100, 0,
-//       (uri: any) => { resolve(uri) },
-//       "base64"
-//     )
-//   })
-// )
+interface TankItemObject extends NftTankObject {
+  itemType: ItemType,
+  energyRecoverPerHour: string
+}
 
-export const TankItemCard = ({ item }: TankCardProps) => {
+const TankItemCard = ({ item }: TankCardProps) => {
   const navigate = useNavigate();
-  const [state] = useGlobalContext();
+  const [state, { updateBaseNfts }] = useGlobalContext();
 
-  const tankInfo = useMemo(() => {
-    let tankLevel = item.tankLevel;
-    let levelXp = tankLevel * tankLevel * 1000
-    let nextLevelXp = (tankLevel + 1) * (tankLevel + 1) * 1000
-
-    let itemType = 0;
-    let nextLevelExp = nextLevelXp - levelXp;
-    let currentExp = item.experience - levelXp;
+  const tankInfo: TankItemObject = useMemo(() => {
     let energyRecoverPerHour = (item.maxEnergy / 24).toFixed(2);
+    let itemType = item.owner === state.account ? ItemType.onUserMine : ItemType.onUser;
 
-    if (item.owner === state.account) {
-      itemType = ItemType.onUserMine
-    } else itemType = ItemType.onUser;
-
-    return { ...item, itemType, currentExp, nextLevelExp, energyRecoverPerHour }
+    return { ...item, itemType, energyRecoverPerHour }
   }, [item])
 
   const handleLend = async () => {
     try {
-      let signature = await state.signer.signMessage(item.id)
-      await restApi.lend(item.id, "", signature)
-      tips("success", `Lend ${item.id} success`)
+      if (state.walletStatus === 2) {
+        let signature = await state.signer.signMessage(item.id);
+        await restApi.lend(item.id, signature);
+        await updateBaseNfts();
+        tips("success", `Lend tank ${item.id} success`);
+      }
     } catch (err) {
-      console.log("handle lend", err.message);
-      tips("error", `Lend ${item.id} Failed`);
+      apiNotification(err, `Lend tank ${item.id} Failed`)
     }
   }
 
   const handleBorrow = async () => {
     try {
-      if (!state.signer) {
-        throw new Error("Please connect wallet!")
+      if (state.walletStatus === 2) {
+        let signature: string = await state.signer.signMessage(item.id);
+        await restApi.borrow(item.id, signature);
+        await updateBaseNfts();
+        tips("success", `borrow ${item.id} success`);
       }
-
-      let signature: string = await state.signer.signMessage(item.id);
-      await restApi.borrow(item.id, signature);
-      tips("success", `borrow ${item.id} success`);
     } catch (err: any) {
-      console.log("handle lend", err.message);
-      tips("error", `Borrow ${item.id} Failed`);
+      apiNotification(err, `Borrow ${item.id} Failed`)
     }
   }
 
   const handleLike = async () => {
     try {
-      if (!state.signer) {
-        throw new Error("Please connect wallet!")
+      if (state.walletStatus === 2) {
+        let signature: string = await state.signer.signMessage(item.id);
+        await restApi.followTank(item.id, signature);
+        await updateBaseNfts();
+        tips("success", `React ${item.id} success`);
       }
-
-      let signature: string = await state.signer.signMessage(item.id)
-      await restApi.reactNFT(item.id, signature)
-      tips("success", `React ${item.id} success`)
     } catch (err: any) {
-      console.log("handle lend", err.message)
-      tips("error", `React ${item.id} Failed`)
+      apiNotification(err, `Follow ${item.id} Failed`)
     }
   }
 
@@ -101,69 +86,57 @@ export const TankItemCard = ({ item }: TankCardProps) => {
 
   return (
     <CardContainer>
-      <Stack direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        sx={{
-          mb: "10px"
-        }}
-      >
-        <Box sx={{ maxWidth: "40px" }}>
-          {tankInfo.level}/{tankInfo.tankLevel}
+      <Stack direction="row" className='items-center justify-between mb-10'>
+        <Box className="max-w-400">
+          {tankInfo.tankLevel}
         </Box>
 
         <Box sx={{ flex: 1, paddingLeft: "10px" }}>
           <BorderLinearProgress variant="determinate"
-            value={tankInfo.currentExp * 100 / tankInfo.nextLevelExp}
+            value={tankInfo.experience * 100 / tankInfo.targetExp}
           />
         </Box>
       </Stack>
 
-      <CardMedia alt=""
-        component="img"
-        image={tankInfo.image}
-        onClick={handleDetail}
-        style={{
-          height: '194px',
-          marginTop: '16px',
-          borderRadius: '8px',
-          cursor: 'pointer'
-        }}
-      />
+      <Stack direction="column" className='relative' onClick={handleDetail}>
+        <CardMedia alt="" component="img"
+          className='h-194 rounded-8 cursor-pointer'
+          image={tankInfo.image}
+        />
+
+        {tankInfo.chaptionBadge > 0 && (
+          <ChampionBadgeContainer>
+            <img alt="" src={championBadge} />
+
+            {tankInfo.chaptionBadge > 1 && (
+              <Typography variant='h6'>x{tankInfo.chaptionBadge}</Typography>
+            )}
+          </ChampionBadgeContainer>
+        )}
+      </Stack>
 
       <CardContent>
         <Stack>
-          <Typography style={{ textAlign: 'center' }}>
+          <Typography className='text-center'>
             Energy
           </Typography>
         </Stack>
 
-        <Stack sx={{ mt: "5px" }}>
+        <Stack className='mt-5'>
           <Typography sx={{ flex: 1 }}>
-            <BorderLinearProgress variant="determinate"
-              value={tankInfo.energy * 100 / tankInfo.maxEnergy}
-            />
+            <BorderLinearProgress variant="determinate" value={tankInfo.energy * 100 / tankInfo.maxEnergy} />
           </Typography>
         </Stack>
 
-        <Stack direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{
-            mt: "10px"
-          }}
-        >
+        <Stack direction="row" className='items-center justify-between mt-10'>
           <Typography>{tankInfo.name}</Typography>
-          <Typography>{getSubString(tankInfo.owner)}</Typography>
+          <Typography>{textEllipsis(tankInfo.owner)}</Typography>
         </Stack>
       </CardContent>
 
-      <CardActions sx={{
-        display: "flex",
-        justifyContent: "space-between"
-      }}>
+      <CardActions className='flex justify-between'>
         <IconButton aria-label="add to favorites" onClick={handleLike}>
-          <FavoriteIcon style={{ marginRight: '5px' }} /> {tankInfo.followers.length}
+          <FavoriteIcon className='mr-5' /> {tankInfo.followers.length}
         </IconButton>
 
         {tankInfo.itemType === ItemType.onUserMine ? (
@@ -176,7 +149,7 @@ export const TankItemCard = ({ item }: TankCardProps) => {
           </Stack>
         ) : (
           <Stack spacing={2} direction="row">
-            {tankInfo.borrower === "" && (
+            {(tankInfo.borrower === "" && state.walletStatus === 2) && (
               <ActionButton1 onClick={handleBorrow}>Borrow</ActionButton1>
             )}
 
@@ -190,15 +163,4 @@ export const TankItemCard = ({ item }: TankCardProps) => {
   )
 }
 
-const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-  height: 10,
-  borderRadius: 10,
-  border: '1px solid #777',
-  [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: "transparent",
-  },
-  [`& .${linearProgressClasses.bar}`]: {
-    borderRadius: 5,
-    backgroundColor: "#973800"
-  },
-}))
+export { TankItemCard }

@@ -1,8 +1,7 @@
 import React from "react";
-import { useState, useMemo } from "react";
-import { Stack } from "@mui/system";
 import { styled } from "@mui/material/styles";
-import { Box, Accordion as MuiAccordion, AccordionProps } from '@mui/material';
+import { useState, useEffect, useMemo } from "react";
+import { Box, Stack, Accordion as MuiAccordion, AccordionProps } from '@mui/material';
 import { TextField as MuiTextField, CircularProgress, Slider } from '@mui/material';
 import { AccordionDetails as MuiAccordionDetails, Typography, Grid } from '@mui/material';
 import { AccordionSummary as MuiAccordionSummary, AccordionSummaryProps } from '@mui/material';
@@ -10,8 +9,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { useGlobalContext } from "provider";
 import { GridItem } from "components/grid";
-import { ellipsis, tips } from "utils/util";
+import { textEllipsis, tips, toLanguageFormat } from "utils/util";
 import { ActionButton1 } from "components/buttons";
+import { apiNotification } from "utils/services";
+
+import baseGuild from "assets/image/baseguild.png";
 
 interface NumberInputProps {
   label: string
@@ -21,80 +23,98 @@ interface NumberInputProps {
   onAction: CallableFunction
 }
 
-export const PoolItem = (props: any) => {
-  const { item, index, expanded, handleExpand } = props;
+interface PoolitemProps {
+  index: number
+  expanded: any
+  handleExpand: any
+  guildData: GuildObject
+}
+
+const PoolItem = (props: PoolitemProps) => {
+  const { guildData, index, expanded, handleExpand } = props;
   const [state, { stake, unstake }] = useGlobalContext();
+  const [maxAmount, setMaxAmount] = useState<number>(0);
+
+  useEffect(() => {
+    const tempBalance = state.balance;
+    const tempAvailable = guildData.maxStakingPool - guildData.stakingPool;
+
+    if (tempBalance < tempAvailable) {
+      setMaxAmount(tempBalance);
+    } else {
+      setMaxAmount(tempAvailable);
+    }
+  }, [state.balance, guildData])
 
   const handleStake = async (value: number) => {
-    if (!state.signer) {
-      throw new Error("Please connect wallet!")
-    }
-
-    await stake(item.id, value)
+    await stake(guildData.id, value)
   }
 
   const handleUnstake = async (value: number) => {
-    if (!state.signer) {
-      throw new Error("Please connect wallet!")
-    }
-
-    await unstake(item.id, value)
+    await unstake(guildData.id, value)
   }
 
   return (
-    <Accordion key={index}
+    <Accordion className="m-5"
       expanded={expanded === `expand${index}`}
       onChange={handleExpand(`expand${index}`)}
     >
-      <AccordionSummary sx={{ minHeight: "60px" }}>
-        <Grid container spacing={2} style={{ alignItems: 'center' }}>
-          <GridItem style={{ alignItems: 'center' }}>
-            <Box alt=""
-              component="img"
-              src={item.image}
-              sx={{
-                textAlign: "center",
-                width: "40px",
-                borderRadius: '5px',
-              }}
+      <AccordionSummary className="min-h-60">
+        <Grid container spacing={2} className="items-center">
+          <GridItem className="items-center">
+            <img alt=""
+              src={guildData.image || baseGuild}
+              className="w-40 aspect-square text-center rounded-5"
             />
 
-            <Typography style={{ paddingLeft: '1rem' }}>
-              {item.name}
+            <Typography className="pl-1r">
+              {guildData.name}
             </Typography>
           </GridItem>
 
           <GridItem>
             <Typography>
-              {ellipsis(item.owner, 15)}
+              {textEllipsis(guildData.owner, 15)}
             </Typography>
           </GridItem>
 
           <GridItem>
             <Typography>
-              {state.stakes[item.id] ? state.stakes[item.id] : "0"}
+              {state.stakes[guildData.id] ? state.stakes[guildData.id] : "0"}
             </Typography>
           </GridItem>
 
           <GridItem>
             <Typography>
-              {item.energyPool}/{item.maxEnergyPool}
+              {toLanguageFormat(guildData.stakingPool)}/{toLanguageFormat(guildData.maxStakingPool)}
             </Typography>
           </GridItem>
         </Grid >
       </AccordionSummary >
 
-      <AccordionDetails>
-        <Grid container spacing={2} sx={{ padding: "20px" }}>
-          <Grid item xs={12} md={6} textAlign="center">
-            <NumberInputPanel label={"DFTL"} actionLabel={"Stake"} max={(Number(state.balance)) < (item.maxEnergyPool - item.energyPool) ? (state.balance) : (item.maxEnergyPool - item.energyPool)} balance={state.balance} onAction={handleStake} />
-          </Grid>
+      {state.walletStatus === 2 && (
+        <AccordionDetails>
+          <Grid container spacing={2} sx={{ padding: "20px" }}>
+            <Grid item xs={12} md={6} textAlign="center">
+              <NumberInputPanel label="DFTL"
+                balance={state.balance}
+                onAction={handleStake}
+                actionLabel="Stake"
+                max={maxAmount}
+              />
+            </Grid>
 
-          <Grid item xs={12} md={6} textAlign="center" >
-            <NumberInputPanel label={"SDFTL"} actionLabel={"Withdraw"} max={state.stakes[item.id] ? state.stakes[item.id] : 0} balance={state.stakes[item.id] ? state.stakes[item.id] : 0} onAction={handleUnstake} />
+            <Grid item xs={12} md={6} textAlign="center" >
+              <NumberInputPanel label="DFTL"
+                balance={state.stakes[guildData.id] || 0}
+                max={state.stakes[guildData.id] || 0}
+                onAction={handleUnstake}
+                actionLabel="Withdraw"
+              />
+            </Grid>
           </Grid>
-        </Grid>
-      </AccordionDetails>
+        </AccordionDetails>
+      )}
     </Accordion >
   )
 }
@@ -144,6 +164,7 @@ const TextField = styled(MuiTextField)(({ theme }) => ({
 }))
 
 const NumberInputPanel = ({ label, actionLabel, balance, max, onAction }: NumberInputProps) => {
+  const [state] = useGlobalContext();
   const [value, setValue] = useState(0);
   const [isLoading, setLoading] = useState(false);
 
@@ -154,16 +175,19 @@ const NumberInputPanel = ({ label, actionLabel, balance, max, onAction }: Number
   }
 
   const handleAction = async () => {
-    setLoading(true);
-
     try {
-      await onAction(value);
-      tips("success", `${actionLabel} Success`)
+      if (state.walletStatus === 2) {
+        setLoading(true);
+        await onAction(value);
+
+        setLoading(false);
+        tips("success", `${actionLabel} Success`);
+      }
     } catch (err: any) {
-      tips("error", `${actionLabel} failed`)
+      setLoading(false);
+      apiNotification(err, `${actionLabel} failed`);
     }
 
-    setLoading(false)
   }
 
   const marks = useMemo(() => {
@@ -179,49 +203,47 @@ const NumberInputPanel = ({ label, actionLabel, balance, max, onAction }: Number
     return data
   }, [])
 
+  const onChangeSlider = ({ target }: any) => {
+    setValue(target.value * max / 100)
+  }
+
   return (
     <Stack alignItems="center" spacing={2}>
-      <Box width="100%" display="flex">
+      <Box className="w-full flex">
         <TextField type="number"
           value={value}
           onChange={handleInput}
           label={`${label} : ${balance}`}
           InputLabelProps={{ shrink: true }}
-          sx={{ flex: 1, maxWidth: "500px", marginInline: "auto" }}
+          className="flex-1 max-w-500 mx-auto"
         />
       </Box>
 
-      <Box width="100%" display="flex">
+      <Box className="w-full flex">
         <Slider min={0} max={100}
           marks={marks}
           aria-label="Small"
           disabled={Number(max) === 0}
-          value={value * 100 / max}
-          onChange={(e: any) => { setValue(e.target.value * max / 100) }}
-          sx={{
-            flex: 1,
-            maxWidth: "500px",
-            marginInline: "auto"
-          }}
+          value={Number(value * 100 / max) || 0}
+          onChange={onChangeSlider}
+          className="flex-1 max-w-500 mx-auto"
         />
       </Box>
 
-      <Box sx={{ position: 'relative' }}>
-        <ActionButton1 disabled={isLoading}
-          onClick={handleAction}
-        >
+      <Box className="relative w-full">
+        <ActionButton1 disabled={isLoading} onClick={handleAction}>
           {actionLabel}
         </ActionButton1>
 
         {isLoading && (
           <CircularProgress size={24}
             sx={{
-              color: "primary.main",
-              position: 'absolute',
               top: '50%',
               left: '50%',
+              position: 'absolute',
               marginTop: '-12px',
               marginLeft: '-12px',
+              color: "primary.main",
             }}
           />
         )}
@@ -229,3 +251,5 @@ const NumberInputPanel = ({ label, actionLabel, balance, max, onAction }: Number
     </Stack>
   )
 }
+
+export { PoolItem }

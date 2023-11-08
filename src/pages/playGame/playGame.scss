@@ -1,0 +1,21 @@
+.playGame-container {
+    position: relative;
+    border: 1px solid;
+    width: 100%;
+
+    .loading-overlay {
+        display: flex;
+        position: absolute;
+        justify-content: center;
+        align-items: flex-end;
+        text-align: center;
+
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        border-radius: 12px;
+        background-image: url('../../assets/image/loadingBG.webp');
+    }
+}

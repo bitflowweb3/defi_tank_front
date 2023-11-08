@@ -1,8 +1,6 @@
-import React from 'react';
-
-import networks from "../blockchain/networks.json"
-import { fromBigNum, tips } from '../utils/util';
 import { TANKTOKEN } from 'blockchain';
+import { fromBigNum, tips } from '../utils/util';
+import networks from "../blockchain/networks.json";
 
 const addNetwork = async (chainId: number) => {
   try {

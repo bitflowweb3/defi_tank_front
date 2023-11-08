@@ -1,0 +1,40 @@
+@use '../../assets/style/variable.scss';
+
+.rewardTime-wrapper {
+    gap: 8px;
+    align-items: center;
+    justify-content: start;
+    padding: 8px;
+
+    .rewardTime-container {
+        display: flex;
+
+        flex-direction: column;
+        justify-content: center;
+        align-items: start;
+
+        border-radius: 1rem;
+        padding: 1rem 2rem 1rem 4rem;
+        transform: translateX(-71px) translateY(15px);
+        background: linear-gradient(to right, #00000015, #000000dd);
+    }
+
+    @media (max-width: variable.$md) {
+        width: 100%;
+        position: relative;
+
+        .rewardTime-container {
+            position: absolute;
+            transform: translateX(35px) translateY(10px);
+        }
+    }
+}
+
+.rewardItem-wrapper {
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 8px;
+    border-radius: 8px;
+    background: linear-gradient(to right, #c76e36 30%, #c76e3650);
+}

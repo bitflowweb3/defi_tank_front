@@ -5,17 +5,10 @@ import { Box, Typography } from '@mui/material';
 import { ActionButton2 } from "components/buttons";
 import { Layouts } from "components/layouts/layouts";
 
-
-export const NotFoundPage = () => {
+const NotFoundPage = () => {
   return (
     <Layouts>
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'column',
-        minHeight: 'calc(100vh - 160px)'
-      }}>
+      <Box className="flex-1 flex flex-col justify-center items-center">
         <Typography variant="h1" style={{ color: 'white' }}>
           404
         </Typography>
@@ -33,3 +26,5 @@ export const NotFoundPage = () => {
     </Layouts>
   )
 }
+
+export { NotFoundPage }

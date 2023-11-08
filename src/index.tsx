@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from 'react-dom';
-import { UseWalletProvider } from 'use-wallet'
+import { UseWalletProvider } from 'use-wallet';
 
-import './index.css'
-import './tailwindcss.css'
+import './index.css';
+import './tailwindcss.css';
 import './assets/style/global.scss';
 
 import { Routers } from './routers';
@@ -12,19 +12,20 @@ import { config } from './config/config';
 import { GlobalProvider } from './provider';
 import reportWebVitals from './reportWebVitals';
 
+window.alert = console.log
 ReactDOM.render(
   // @ts-ignore
-  // <React.StrictMode>
-  <UseWalletProvider autoConnect={true}
-    connectors={{ injected: { chainId: [config.CHAINID] } }}
-  >
-    <GlobalProvider>
-      <MuiProvider>
-        <Routers />
-      </MuiProvider>
-    </GlobalProvider>
-  </UseWalletProvider>,
-  // </React.StrictMode>,
+  <React.StrictMode>
+    <UseWalletProvider autoConnect={true}
+      connectors={{ injected: { chainId: [config.CHAINID] } }}
+    >
+      <GlobalProvider>
+        <MuiProvider>
+          <Routers />
+        </MuiProvider>
+      </GlobalProvider>
+    </UseWalletProvider>
+  </React.StrictMode>,
   document.getElementById('root')
 )
 

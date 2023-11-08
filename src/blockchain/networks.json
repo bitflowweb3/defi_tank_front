@@ -20,7 +20,7 @@
 		"name": "Sepolia test network",
 		"symbol": "SepoliaETH",
 		"decimals": 18,
-		"rpc": "https://sepolia.infura.io/v3/",
+		"rpc": "https://endpoints.omniatech.io/v1/eth/sepolia/public",
 		"explorer": "https://sepolia.etherscan.io"
 	},
 	{
@@ -62,6 +62,14 @@
 		"decimals": 18,
 		"rpc": "https://goerli-rollup.arbitrum.io/rpc",
 		"explorer": "https://goerli.arbiscan.io"
+	},
+	{
+		"chainId": 421614,
+		"name": "Arbitrum Sepolia",
+		"symbol": "AGOR",
+		"decimals": 18,
+		"rpc": "https://sepolia-rollup.arbitrum.io/rpc",
+		"explorer": "https://sepolia.arbiscan.io"
 	},
 	{
 		"chainId": 351,

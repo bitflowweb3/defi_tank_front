@@ -1,12 +1,11 @@
 import React from "react";
+import { useState } from "react";
 import Jazzicon from 'react-jazzicon';
-import { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { Box, Stack, IconButton, Typography, Modal } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
-import userTempImg from "../../assets/image/tanker-temp.png";
-import userTempCoverImg from "../../assets/image/tank55.webp";
+import userTempCoverImg from "../../assets/image/bg (7).webp";
 import discordIcon from "../../assets/image/discordicon.png";
 import linkedinIcon from "../../assets/image/linkedinicon.png";
 import telegramIcon from "../../assets/image/telegramicon.png";
@@ -14,9 +13,10 @@ import defaultlinkIcon from "../../assets/image/defaultlinkicon.png";
 
 import { EditProfile } from "./editpanel";
 import { ActionButton2 } from "../buttons";
+import { getSeed, tips, toLanguageFormat } from "utils/util";
 import { restApi } from "../../provider/restApi";
+import { apiNotification } from "utils/services";
 import { useGlobalContext } from "../../provider";
-import { getSeed } from "utils/util";
 
 const linkIcons: any = {
   discord: discordIcon,
@@ -25,161 +25,133 @@ const linkIcons: any = {
   defaultlink: defaultlinkIcon,
 }
 
-const initProfile: UserObject = {
-  status: 'init',
-  name: "player",
-  address: "",
-  email: "",
-  description: "Player",
-  follows: 0,
-  image: "",
-  coverImage: "",
-  links: [],
-  ranking: -1,
-  merit: 0,
+interface ProfilePanelProps {
+  address: string
+  userData: UserObject
+  updateUserData: any
 }
 
-export const ProfilePanel = ({ address }) => {
+const ProfilePanel = ({ address, userData, updateUserData }: ProfilePanelProps) => {
   const [state] = useGlobalContext();
   const [openModal, setOpenModal] = useState(false);
-  const [profile, setProfile] = useState<UserObject>(initProfile);
 
-  useEffect(() => {
-    if (state.walletStatus === 2) {
-      updateProfile()
-    } else if (profile.status !== 'init') {
-      setProfile(initProfile)
-    }
-  }, [state.walletStatus])
-
-  const updateProfile = async () => {
+  const handleLike = async () => {
     try {
-      const tempData = await restApi.getProfile(address)
-      setProfile(tempData)
-    } catch (err) {
-      if (profile.status !== 'init') {
-        setProfile(initProfile)
+      if (state.walletStatus === 2) {
+        let signature: string = await state.signer.signMessage(address);
+        await restApi.followUser(address, signature);
+        tips("success", `Follow successed!`);
+        updateUserData();
       }
+    } catch (err: any) {
+      apiNotification(err, "User follow failed!");
     }
   }
 
   return (
-    <Stack direction="row"
-      alignItems="center"
-      sx={{
-        minHeight: "300px",
-        width: "100%",
-        position: "relative"
-      }}
-    >
+    <Stack direction="row" className="relative min-h-300 w-full items-center">
       <BackgroundTag>
-        <BackgroundImageTag alt="Tanker" src={profile.coverImage || userTempCoverImg} />
-        <BackgroundColorTag />
+        <CoverBGTag />
+        {/* <BackgroundImageTag alt="Tanker" src={userTempCoverImg} />
+        <BackgroundColorTag /> */}
       </BackgroundTag>
 
-      <Stack
+      <Stack flex={1} gap={2}
         direction={{ sm: "column", md: "row" }}
-        sx={{ padding: { xs: "5px", sm: "30px" }, flex: 1 }}
-        justifyContent="space-between"
-        alignItems="center"
+        className="justify-between items-center p-5 sm:p-30"
       >
         <Stack direction={{ xs: "column", sm: "row" }} spacing={4}>
-          {profile.image ? (
-            <Box alt="Profile" component="img"
-              src={profile.image || userTempImg}
-              sx={{
-                textAlign: "center",
-                width: "150px",
-                height: "150px",
-                border: "5px solid",
-                borderColor: "primary.light",
-                objectFit: "cover",
-                borderRadius: "20px",
-              }}
+          {userData.image ? (
+            <Box alt=""
+              component="img"
+              src={userData.image}
+              borderColor="primary.light"
+              className="w-150 h-150 border-5 object-cover rounded-20"
             />
           ) : (
-            // @ts-ignore
             <Jazzicon diameter={100} seed={getSeed(address)} />
           )}
 
-          {/* profile info */}
           <Stack spacing={1.5}>
             <Typography variant="h4">
-              {profile.name}
+              {userData.name}
             </Typography>
 
             <Stack direction="row" spacing={2}>
-              {profile.links.map((link: any, key: number) => (
-                <Box key={key}
-                  component="a"
-                  href={link.href || "/"}
-                >
-                  <Box alt="Profile" component="img"
+              {userData.links.map((link: any, key: number) => (
+                <Box key={key} component="a" href={link.href || "/"}>
+                  <Box alt="" component="img"
+                    className="w-30 h-30 object-cover text-center"
                     src={linkIcons[link.type] || linkIcons["defaultlink"]}
-                    sx={{
-                      textAlign: "center",
-                      width: "30px",
-                      height: "30px",
-                      objectFit: "cover",
-                    }}
                   />
                 </Box>
               ))}
             </Stack>
 
             <Typography>
-              {profile.description}
+              {userData.description}
             </Typography>
 
-            {/* follow */}
             <Stack direction="row" spacing={1} alignItems="center">
-              <IconButton aria-label="add to favorites">
+              <IconButton aria-label="" onClick={handleLike}>
                 <FavoriteIcon />
               </IconButton>
 
               <Typography>
-                Follows {profile.follows}
+                Follows {userData.follows}
               </Typography>
             </Stack>
 
-            {/* Edit profile */}
-            {(address && address === state.account) && (
+            {(state.account && state.account === address) && (
               <ActionButton2 onClick={() => setOpenModal(true)}>
-                {state.account && profile.email === "" ? "Create Profile To Play Game" : "Edit Profile"}
+                {state.account && userData.email === "" ? "Create Profile To Play Game" : "Edit Profile"}
               </ActionButton2>
             )}
           </Stack>
         </Stack>
 
-        {/* Ranking info */}
-        <Stack sx={{ minWidth: "200px" }} spacing={2}>
-          <Typography>
-            Ranking: {profile.ranking == -1 ? "-" : profile.ranking + 1}
-          </Typography>
+        <Stack gap={1} direction={{ xs: "column", lg: "row" }}>
+          <Stack gap={1} className="min-w-200">
+            <Typography>
+              Potion: {toLanguageFormat(userData.potion)}
+            </Typography>
 
-          <Typography>
-            Merit: {profile.merit}
-          </Typography>
+            <Typography>
+              Golds: {toLanguageFormat(userData.golds)}
+            </Typography>
 
-          <Typography>
-            Borrow: {profile.borrowCount}
-          </Typography>
+            <Typography>
+              Exp: {toLanguageFormat(userData.experience)}
+            </Typography>
+          </Stack>
+
+          <Stack gap={1} className="min-w-200">
+            <Typography>
+              Ranking: {userData.ranking === -1 ? "-" : userData.ranking + 1}
+            </Typography>
+
+            <Typography>
+              Merit: {toLanguageFormat(userData.merit)}
+            </Typography>
+
+            <Typography>
+              Borrow: {userData.borrowCount}
+            </Typography>
+          </Stack>
         </Stack>
       </Stack>
 
-      <Modal open={openModal}
-        onClose={() => setOpenModal(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div>
-          <EditProfile profile={profile}
-            updateProfile={updateProfile}
-            setModal={setOpenModal}
-            address={address}
-          />
-        </div>
-      </Modal>
+      {(state.account && state.account === address) && (
+        <Modal open={openModal} onClose={() => setOpenModal(false)}>
+          <div className="">
+            <EditProfile profile={userData}
+              updateProfile={updateUserData}
+              setModal={setOpenModal}
+              address={address}
+            />
+          </div>
+        </Modal>
+      )}
     </Stack>
   )
 }
@@ -204,6 +176,17 @@ const BackgroundImageTag = styled("img")(({ theme }) => ({
   opacity: "0.7",
 }))
 
+const CoverBGTag = styled("div")(({ theme }) => ({
+  backgroundColor: "#060200e3",
+  position: "absolute",
+  left: 0,
+  top: 0,
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+  opacity: "0.7"
+}))
+
 const BackgroundColorTag = styled("div")(({ theme }) => ({
   backgroundColor: "#6e120066",
   position: "absolute",
@@ -213,3 +196,5 @@ const BackgroundColorTag = styled("div")(({ theme }) => ({
   width: "100%",
   height: "100%",
 }))
+
+export { ProfilePanel }

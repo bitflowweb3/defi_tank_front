@@ -4,13 +4,15 @@ import { Link } from 'react-router-dom';
 import { Grid, TextField } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { useCallback, useMemo, useState, useEffect } from 'react';
+import { useCallback, useMemo, useEffect } from 'react';
 
 import { restApi } from "provider/restApi";
 import { useGlobalContext } from "provider";
 import { ActionButton2 } from "components/buttons";
-import { ellipsis, textCopy, tips } from "utils/util";
-import { Layouts } from "components/layouts/layouts";
+import { textEllipsis, textCopy, tips, toLanguageFormat } from "utils/util";
+import { GlobalSpacing, Layouts } from "components/layouts/layouts";
+import { config } from "config/config";
+import { apiNotification } from "utils/services";
 
 interface StatusObject {
   referralCode: string
@@ -30,9 +32,8 @@ const initStatus = {
   error: ""
 }
 
-export const ReferralPage = () => {
+const ReferralPage = () => {
   const [state] = useGlobalContext();
-  const [requestUpdate, setRequestUpdate] = useState(0)
   const [status, setStatus] = React.useState<StatusObject>(initStatus)
 
   const updateStatus = (params: { [key: string]: any }) => (
@@ -103,33 +104,30 @@ export const ReferralPage = () => {
   }, [status.referrallers, status.filter])
 
   useEffect(() => {
-    (async () => {
-      if (state.account) {
-        const tempAddr = state.account || ""
-        const result = await restApi.getReferralData(tempAddr)
+    getReferrals();
+    if (!state.account) return;
 
-        if (!!result && Object.keys(result).length) {
-          const referrers = await restApi.getReferrerInfo(result?.referrallers)
+    let interval = setInterval(() => {
+      getReferrals();
+    }, 5000)
 
-          updateStatus({
-            referralCode: result?.referralCode,
-            referrer: result?.referrer,
-            referralReward: result?.referralReward,
-            referrallers: referrers
-          })
-        } else {
-          updateStatus({
-            error: "Could not found referral data",
-            referralCode: "",
-            referrer: "",
-            referralReward: 0,
-            referrallers: []
-          })
-        }
+    return () => { clearInterval(interval) }
+  }, [state.account])
 
-        setTimeout(() => {
-          setRequestUpdate(requestUpdate + 1)
-        }, 5000)
+  const getReferrals = async () => {
+    if (state.account) {
+      const tempAddr = state.account || ""
+      const result = await restApi.getReferralData(tempAddr)
+
+      if (!!result && Object.keys(result).length) {
+        const referrers = await restApi.getReferrerInfo(result?.referrallers)
+
+        updateStatus({
+          referralCode: result?.referralCode,
+          referrer: result?.referrer,
+          referralReward: result?.referralReward,
+          referrallers: referrers
+        })
       } else {
         updateStatus({
           error: "Could not found referral data",
@@ -139,168 +137,123 @@ export const ReferralPage = () => {
           referrallers: []
         })
       }
-    })()
-  }, [state.account, requestUpdate])
-
+    } else {
+      updateStatus({
+        error: "Could not found referral data",
+        referralCode: "",
+        referrer: "",
+        referralReward: 0,
+        referrallers: []
+      })
+    }
+  }
 
   const getReward = async () => {
-    const res = await restApi.claimReward(state.account)
-
-    if (res.status !== 200) {
-      tips("error", "Claim request failed")
-    } else {
-      tips("success", "Claim request success")
+    try {
+      await restApi.claimReward(state.account);
+      await getReferrals();
+      tips("success", "Claim request success");
+    } catch (err) {
+      apiNotification(err, "Claim request failed");
     }
   }
 
   const copyRefCode = () => {
-    textCopy("https://app.defitankland.com/refcode/" + status.referralCode);
+    textCopy(config.FRONTEND_URL + '/refcode/' + status.referralCode);
   }
 
   return (
     <Layouts>
-      <div className="flex flex-row items-center">
-        <div style={{
-          width: 'auto',
-          padding: '1rem',
-          minWidth: "200px",
-          borderRadius: '12px',
-          margin: '0 2rem 0 0',
-          backgroundColor: '#060200b5',
-          border: '0px solid #f55b00',
-        }}>
-          <h2 style={{ color: 'white', margin: '10px' }}>
-            Referral code
-          </h2>
+      <GlobalSpacing className="flex flex-col gap-10">
+        <h1 className="text-white">
+          Referees : {status.referrallers.length}
+        </h1>
 
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <h3 style={{ color: 'white', margin: '10px' }}>
-              {status.referralCode ? (
-                ellipsis(status.referralCode, 10)
-              ) : (
-                <Link to="/my-tanks"
-                  style={{
-                    textDecoration: 'none',
-                    color: '#f2fff2',
-                    padding: '0.5rem',
-                    borderRadius: '6px',
-                    backgroundColor: '#f55b00'
-                  }}>
-                  Create profile
-                </Link>
+        <div className="flex flex-row gap-10 items-center flex-wrap">
+          <div className="flex flex-col gap-10 sm:min-w-200 w-full sm:w-auto px-25 py-25 rounded-12 bg-boxBg">
+            <h2 className="text-white">Referral code</h2>
+
+            <div className="flex gap-5 items-center">
+              <h3 className="text-white">
+                {status.referralCode && (
+                  textEllipsis(status.referralCode, 10)
+                )}
+
+                {(!status.referralCode && state.walletStatus === 2) && (
+                  <Link to="/profile" className="px-20 py-10 rounded-6 bg-btnBg text-white no-underline">
+                    Create profile
+                  </Link>
+                )}
+              </h3>
+
+              {status.referralCode && (
+                <div onClick={copyRefCode}>
+                  <ContentCopyIcon className="text-white cursor-pointer" />
+                </div>
               )}
-            </h3>
-
-            {status.referralCode && (
-              <div onClick={copyRefCode}>
-                <ContentCopyIcon style={{
-                  color: 'white',
-                  cursor: 'pointer',
-                  marginLeft: '1rem'
-                }}
-                />
-              </div>
-            )}
+            </div>
           </div>
-        </div>
 
-        <div style={{
-          width: 'auto',
-          padding: '1rem',
-          minWidth: "200px",
-          margin: '0 2rem 0 0',
-          borderRadius: '12px',
-          backgroundColor: '#060200b5',
-          border: '0px solid #f55b00',
-        }}>
-          <h2 style={{ color: 'white', margin: '10px' }}>Referrer</h2>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <h3 style={{ color: 'white', margin: '10px' }}>
-              {status.referrer ? (
-                ellipsis(status.referrer, 10)
-              ) : (
-                <span style={{ color: 'white' }}>No referrer</span>
+          <div className="flex flex-col gap-10 sm:min-w-200 w-full sm:w-auto px-25 py-25 rounded-12 bg-boxBg">
+            <h2 className="text-white">Referrer</h2>
+
+            <div className="flex items-center">
+              <h3 className="text-white">
+                {status.referrer ? (
+                  textEllipsis(status.referrer, 10)
+                ) : (
+                  <span>No referrer</span>
+                )}
+              </h3>
+
+              {status.referrer && (
+                <div onClick={() => { textCopy(status.referrer) }}>
+                  <ContentCopyIcon className="text-white cursor-pointer" />
+                </div>
               )}
-            </h3>
+            </div>
+          </div>
 
-            {status.referrer && (
-              <div onClick={() => { textCopy(status.referrer) }}>
-                <ContentCopyIcon style={{ color: 'white', cursor: 'pointer', marginLeft: '1rem' }} />
-              </div>
-            )}
+          <div className="flex flex-col gap-10 sm:min-w-200 w-full sm:w-auto px-25 py-25 rounded-12 bg-boxBg">
+            <h2 className="text-white">Reward Amount</h2>
+
+            <div className="flex items-center gap-15 flex-wrap">
+              <h3 className="text-white">
+                {toLanguageFormat(status.referralReward)} DFTL
+              </h3>
+
+              {status.referralReward > 0 && (
+                <div className="flex flex-row">
+                  <ActionButton2 onClick={getReward} className="cursor-pointer">
+                    Claim
+                  </ActionButton2>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        <div style={{
-          width: 'auto',
-          padding: '1rem',
-          minWidth: "200px",
-          margin: '0 2rem 0 0',
-          borderRadius: '12px',
-          backgroundColor: '#060200b5',
-          border: '0px solid #f55b00',
-        }}>
-          <h2 style={{ color: 'white', margin: '10px' }}>
-            Reward Amount
-          </h2>
-
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <h3 style={{ color: 'white', margin: '10px' }}>
-              {status.referralReward || 0} DFTL
-            </h3>
-
-            {status.referralReward > 0 && (
-              <div>
-                <ActionButton2 onClick={getReward}
-                  style={{ marginLeft: '1rem' }}
-                >
-                  Claim
-                </ActionButton2>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <br />
-
-      <h1 className="text-white my-20">
-        Referees : {status.referrallers.length}
-      </h1>
-
-      <br />
-
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField label="Search"
-            variant="outlined"
-            value={status.filter}
-            onChange={(e: any) => updateStatus({ filter: e.target.value })}
-            sx={{
-              width: "100%",
-              background: "#00000075",
-              borderRadius: '5px'
-            }}
-          />
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField label="Search"
+              variant="outlined" value={status.filter}
+              className="w-full bg-inputBg rounded-5"
+              onChange={(e: any) => updateStatus({ filter: e.target.value })}
+            />
+          </Grid>
         </Grid>
-      </Grid>
 
-      <br />
-
-      <Box sx={{ height: 600, width: "100%" }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          pageSize={10}
-          getRowId={(row) => row.address}
-          rowsPerPageOptions={[10]}
-          rowHeight={70}
-          style={{
-            backgroundColor: '#00000094',
-            borderRadius: '10px'
-          }}
-        />
-      </Box>
+        <div className="h-600 w-full">
+          <DataGrid rows={rows}
+            pageSize={10} columns={columns}
+            getRowId={(row) => row.address}
+            rowHeight={70} rowsPerPageOptions={[10]}
+            style={{ backgroundColor: '#00000094', borderRadius: '10px' }}
+          />
+        </div>
+      </GlobalSpacing>
     </Layouts>
   )
 }
+
+export { ReferralPage }

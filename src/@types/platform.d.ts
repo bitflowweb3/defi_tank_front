@@ -4,74 +4,111 @@ interface LinksObject {
 }
 
 interface UserObject {
-  status?: string
+  status: string,
+  name: string,
+  email: string,
+  address: string,
+  description: string,
+  experience: number,
 
-  name: string
-  email: string
-  address: string
-  image: string
-  coverImage: string
-  description: string
-  links: LinksObject[]
-  merit: number
-  follows: number
-  ranking: number
+  image: string,
+  coverImage: string,
+  links: LinksObject[],
 
-  role?: string
-  borrowCount?: number
+  golds: number,
+  merit: number,
+  potion: number,
+  follows: number,
+  ranking: number,
+  borrowCount: number,
+}
+
+interface UpgradablePointsObject {
+  health: number
+  fireRate: number
+  firePower: number
+  speed: number
 }
 
 interface NftTankObject {
   id: string
-  owner: string
-  level?: string
-  role?: string
-
   classType: number
-  energy?: number
-  maxEnergy?: number
-  energyPool?: number
-  maxEnergyPool?: number
-  experience?: number
-  tankLevel?: number
-  name?: string
-  image?: string
-  description?: string
-  health?: number
-  fireRate?: number
-  firePower?: number
-  speed?: number
-  borrower?: string
-  followers?: [string]
+  owner: string
+  name: string
+  image: string
+  description: string
+  chaptionBadge: number
 
-  updatedAt?: Date
+  energy: number
+  maxEnergy: number
+  health: number
+  fireRate: number
+  firePower: number
+  speed: number
+  upgradablePoint: number,
+  upgradedPoints: UpgradablePointsObject
+
+  tankLevel: number
+  experience: number
+  targetExp: number
+  spells: SpellObject[]
+  goldForLevel: number
+
+  borrower: string
+  followers: [string]
+  updatedAt: Date
+  createdAt: Date
+  role: string
+}
+
+interface GuildMemberObject {
+  address: string
+  name: string
+  image: string
+  coverImage: string
+  followers: string[]
+  experience: number
+  merit: number
+  potion: number
 }
 
 interface GuildObject {
-  id: string
   name: string
   image: string
+  classType: string
   description: string
+
+  id: string
   owner: string
   maxMembers: number
-  merit?: number
-  level?: number
-  members?: string[]
-  requests?: string[]
-  followers?: string[]
-  role?: string
+
+  level: number
+  potion: number
+  potionScore: number
+  merit: number
+
+  stakingPool: number
+  maxStakingPool: number
+
+  ownerNickName: string,
+  ownerData: GuildMemberObject,
+  members: GuildMemberObject[],
+  requests: GuildMemberObject[],
+  followers: string[],
+  items: string[],
+  role: string,
+
+  guildLevel: number,
+  experience: number,
+  targetExp: number,
 }
 
-interface ItemObject {
-  id: string
+interface LeaderBoardObject {
   name: string
+  owner?: string
+  address?: string
   image: string
-  description: string
-  owner: string
-  limitation: number
-  maxLimit: number
-  merit?: number
-  level?: number
-  followers?: string[]
-  role?: string
+  merit: number
+  reward: number
+  rank: number
 }

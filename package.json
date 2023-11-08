@@ -1,5 +1,5 @@
 {
-  "name": "nova-bridge",
+  "name": "defitankland-platform",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,6 +13,7 @@
     "@mui/material": "^5.13.1",
     "@mui/styled-engine": "^5.12.3",
     "@mui/styled-engine-sc": "^5.12.0",
+    "@mui/types": "^7.2.6",
     "@mui/x-data-grid": "5.17.3",
     "@types/jest": "^29.5.1",
     "@types/node": "^20.1.1",
@@ -30,6 +31,7 @@
     "react-notifications": "^1.7.4",
     "react-router-dom": "^6.11.1",
     "react-scripts": "4.0.3",
+    "react-unity-webgl": "^9.4.3",
     "recharts": "2.1.14",
     "sass": "^1.62.1",
     "styled-components": "^6.0.0-rc.1",
@@ -38,7 +40,7 @@
     "web-vitals": "^3.3.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start --max_old_space_size=8192",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build:css": "postcss src/index.css -o src/tailwindcss.css",

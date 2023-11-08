@@ -1,28 +1,29 @@
-interface TankClassObject {
+interface SpellObject {
   id: number
-  name?: string
-  image?: string
-  description?: string
-  health?: number
-  fireRate?: number
-  firePower?: number
-  speed?: number
-  healthAdd?: number
-  fireRateAdd?: number
-
-  firePowerAdd?: number
-  speedAdd?: number
-  price?: number
+  tankID: number
+  name: string
+  discription: string
+  image: string
+  params: string
+  stat: number
 }
 
-interface ItemClassObject {
+interface TankClassObject {
   id: number
   name: string
   image: string
   description: string
+  health: number
+  fireRate: number
+  firePower: number
+  speed: number
+  healthAdd: number
+  fireRateAdd: number
+
+  spells: SpellObject[]
+  firePowerAdd: number
+  speedAdd: number
   price: number
-  limitation: number
-  maxLimit: number
 }
 
 interface GuildRuleObject {

@@ -1,0 +1,10 @@
+.profile-menu-wrapper {
+    .MuiPaper-root {
+        background-color: #140f0c !important;
+        filter: drop-shadow(#140f0ce1 0px 0px 10px);
+
+        &::before {
+            background-color: #140f0c !important;
+        }
+    }
+}

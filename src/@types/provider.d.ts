@@ -5,10 +5,11 @@ interface ReducerObject {
 
 interface NotifiObject {
   _id: string
-  type: string
+  user: string
   title: string
-  content: string
-  time: string
+  description: string
+  status: string
+  created: number
 }
 
 interface InitStateObject {
@@ -20,17 +21,22 @@ interface InitStateObject {
   account: string | null
   walletStatus: number
 
-  itemDatas: ItemObject[]
   guildDatas: GuildObject[]
   tankItems: NftTankObject[]
-  notifications: NotifiObject[]
   tankClasses: TankClassObject[]
-  itemClasses: ItemClassObject[]
   guildRules: GuildRuleObject
 
   stakes: any,
-  stakeRate: number,
-  rewardPoolBalance: number,
-  allowances: { toTank: number, toPool: number },
-  poolsInfo: { totalStakedAmount: number, totalCapacity: number },
+  allowances: { toTank: number, toGuild: number, toPool: number }
+  poolsInfo: { apy: number, totalStaked: number, totalCapacity: number }
+  stakeRewards: { rewardDFTL: number, rewardETH: number }
+
+  potionInfo: {
+    price: number
+    sellPrice: number
+    increase: number
+  }
+
+  topPlayReward: number
+  topGuildReward: number
 }

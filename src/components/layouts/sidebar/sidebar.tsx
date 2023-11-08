@@ -1,32 +1,59 @@
-import React from "react"
+import React from "react";
 import { Link } from "react-router-dom";
-import { Box, Drawer, Toolbar, List, ListItem, ListItemButton } from '@mui/material';
+import { Box, Drawer, Toolbar } from '@mui/material';
+import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction';
 
+import { useGlobalContext } from "provider";
 import { imgConfig } from "assets/img.config";
 import { MenuList, drawerWidth } from "./menu.config";
-import { useGlobalContext } from "provider";
 
 const ReferralMenu = () => {
   return (
-    <ListItem disablePadding>
-      <ListItemButton color="primary"
-        to={"/referrals"}
-        component={Link}
-        sx={{
-          paddingTop: "20px",
-          paddingLeft: "50px",
-          paddingBottom: "20px",
-          fontSize: "20px",
-          fontWeight: "600"
-        }}
-      >
+    <Link to="/referral"
+      className="flex flex-row gap-10 items-center px-25 py-8 rounded-8 hover:bg-menuBg hover:text-white"
+    >
+      <OnlinePredictionIcon className="text-30" />
+      <div className="text-15 font-semibold">
         Referral
-      </ListItemButton>
-    </ListItem>
+      </div>
+    </Link>
   )
 }
 
-export const Sidebar = () => {
+const MenuContainer = () => {
+  const [state] = useGlobalContext();
+
+  return (
+    <div className="flex flex-col px-10">
+      <Toolbar className="justify-center px-15">
+        <Link to="/">
+          <img alt="" src={imgConfig.logoImg}
+            className="max-w-200 md:w-200 aspect-square text-center"
+          />
+        </Link>
+      </Toolbar>
+
+      <div className="flex flex-col gap-5 text-white/75">
+        {MenuList.map((menuItem, index) => (
+          <Link key={index} to={menuItem.href}
+            className="flex flex-row gap-10 items-center px-25 py-8 rounded-5 hover:bg-menuBg hover:text-white"
+          >
+            {menuItem.icon}
+            <div className="text-15 font-semibold">
+              {menuItem.title}
+            </div>
+          </Link>
+        ))}
+
+        {state.walletStatus === 2 && (
+          <ReferralMenu />
+        )}
+      </div>
+    </div>
+  )
+}
+
+const Sidebar = () => {
   const [state, { dispatch }] = useGlobalContext();
 
   const handleDrawerToggle = () => {
@@ -34,62 +61,24 @@ export const Sidebar = () => {
   }
 
   return (
-    <Box aria-label="mailbox folders"
-      sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-    >
-      <Drawer open={state.mobileOpen}
+    <Box aria-label="mailbox folders" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
+      <Drawer variant="temporary"
+        open={state.mobileOpen}
         onClose={handleDrawerToggle}
         onClick={handleDrawerToggle}
-        variant="temporary"
-        ModalProps={{
-          keepMounted: true // Better open performance on mobile.
-        }}
+        ModalProps={{ keepMounted: true }} // Better open performance on mobile.
         sx={{
           display: { xs: "block", sm: "none" },
           "& .MuiDrawer-paper": {
             boxSizing: "border-box",
-            width: drawerWidth
+            width: drawerWidth - 20
           }
         }}
       >
-        <div>
-          <Toolbar >
-            <Link to="/">
-              <Box component="img"
-                src={imgConfig.logoImg}
-                alt="DeFiTankLand"
-                sx={{
-                  textAlign: "center",
-                  padding: "20px",
-                  maxWidth: 160,
-                  mt: 3
-                }}
-              />
-            </Link>
-          </Toolbar>
-
-          <List>
-            {MenuList.map((menuItem, index) => (
-              <ListItem key={index} disablePadding>
-                <ListItemButton
-                  color="primary"
-                  component={Link}
-                  to={menuItem.href}
-                  sx={{ paddingTop: "20px", paddingLeft: "50px", paddingBottom: "20px", fontSize: "20px", fontWeight: "600" }}>
-                  {menuItem.title}
-                </ListItemButton>
-              </ListItem>
-            ))}
-
-            {state.walletStatus === 2 && (
-              <ReferralMenu />
-            )}
-          </List>
-        </div>
+        <MenuContainer />
       </Drawer>
 
-      <Drawer open
-        variant="permanent"
+      <Drawer open variant="permanent"
         sx={{
           display: { xs: "none", sm: "block" },
           "& .MuiDrawer-paper": {
@@ -98,42 +87,12 @@ export const Sidebar = () => {
           }
         }}
       >
-        <div>
-          <Toolbar >
-            <Link to="/">
-              <Box
-                component="img"
-                sx={{
-                  textAlign: "center",
-                  padding: "20px",
-                  maxWidth: 160,
-                  mt: 3
-                }}
-                alt="DeFiTankLand"
-                src={imgConfig.logoImg}
-              />
-            </Link>
-          </Toolbar>
-
-          <List>
-            {MenuList.map((menuItem, index) => (
-              <ListItem key={index} disablePadding>
-                <ListItemButton
-                  color="primary"
-                  component={Link}
-                  to={menuItem.href}
-                  sx={{ paddingTop: "20px", paddingLeft: "50px", paddingBottom: "20px", fontSize: "20px", fontWeight: "600" }}>
-                  {menuItem.title}
-                </ListItemButton>
-              </ListItem>
-            ))}
-
-            {state.walletStatus === 2 && (
-              <ReferralMenu />
-            )}
-          </List>
-        </div>
+        <MenuContainer />
       </Drawer>
     </Box>
   )
 }
+
+
+
+export { Sidebar }

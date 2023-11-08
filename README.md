@@ -25,3 +25,6 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+<!-- tailwindcss build when code changed
+### `npx tailwindcss -i ./src/index.css -o ./src/tailwindcss.css --watch` -->

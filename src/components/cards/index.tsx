@@ -1,8 +1,8 @@
 import { Card } from "@mui/material"
 import { styled } from '@mui/material/styles';
 
-export const CardContainer = styled(Card)(({
-  maxWidth: "250px",
+const CardContainer = styled(Card)(({
+  maxWidth: "300px",
   margin: "auto",
   padding: "1.5rem 1rem 1rem",
   borderRadius: '5px',
@@ -16,3 +16,5 @@ export const CardContainer = styled(Card)(({
   flexDirection: 'column',
   justifyContent: 'space-between',
 }))
+
+export { CardContainer }

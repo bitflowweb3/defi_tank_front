@@ -1,30 +1,35 @@
-import React from 'react';
 import { ethers } from "ethers";
 import { NotificationManager } from 'react-notifications';
 
-export const copyObject = (json: any) => {
-  return JSON.parse(JSON.stringify(json))
+const toBigNum = (value: string | number, d: number | undefined = 18) => {
+  return ethers.utils.parseUnits(Number(value).toFixed(d), d);
 }
 
-export const Now = () => {
-  return Math.round(new Date().getTime() / 1000);
+const fromBigNum = (value: any, d: number | undefined = 18) => {
+  return parseFloat(ethers.utils.formatUnits(value, d));
 }
 
-export const convertHMS = (value: any) => {
-  const sec = parseInt(value, 10); // convert value to number if it's string
-  let hours: any = Math.floor(sec / 3600); // get hours
-  let minutes: any = Math.floor((sec - (hours * 3600)) / 60); // get minutes
-  let seconds: any = sec - (hours * 3600) - (minutes * 60); //  get seconds
+const byte32code = (code: string): boolean => {
+  try {
+    if (code.length !== 66 || !code.startsWith("0x")) {
+      return false
+    }
 
-  // add 0 if value < 10; Example: 2 => 02
-  if (hours < 10) { hours = "0" + hours; }
-  if (minutes < 10) { minutes = "0" + minutes; }
-  if (seconds < 10) { seconds = "0" + seconds; }
-
-  return hours + ':' + minutes + ':' + seconds; // Return is HH : MM : SS
+    // const str = ethers.utils.parseBytes32String(code)
+    return true
+  } catch (err: any) {
+    console.log(err)
+    return false
+  }
 }
 
-export const tips = (type: string, html: string) => {
+const getSeed = (address: string) => {
+  const accountNum = Number(address) || 0
+  const zeroNumber = Number("0xffffffffffffffffffffffffffffffffffffffffff")
+  return Math.round(accountNum / zeroNumber * 10000000)
+}
+
+const tips = (type: string, html: string) => {
   switch (type) {
     case 'info': {
       NotificationManager.info(html, "Info");
@@ -45,7 +50,7 @@ export const tips = (type: string, html: string) => {
   }
 }
 
-export const textCopy = (text: string) => {
+const textCopy = (text: string) => {
   let textField = document.createElement('textarea')
   textField.innerText = text
   document.body.appendChild(textField)
@@ -54,69 +59,51 @@ export const textCopy = (text: string) => {
   textField.remove()
 
   let tempText = text
-  if (text.length > 10) {
-    tempText = `${text.substring(0, 5)} ... `
+  if (text.length > 12) {
+    tempText = `${text.substring(0, 7)} ... `
     tempText += text.substring(text.length, text.length - 5)
   }
 
   tips("success", "Copied: " + tempText);
 }
 
-export const getSubString = (text: string) => {
-  let tempText = text
+const convertHMS = (value: number) => {
+  const sec = Math.floor(value);
+  let hours: number | string = Math.floor(sec / 3600); // get hours
+  let minutes: number | string = Math.floor((sec - (hours * 3600)) / 60); // get minutes
+  let seconds: number | string = sec - (hours * 3600) - (minutes * 60); //  get seconds
 
-  if (text.length > 10) {
-    tempText = text.slice(0, 5) + '...' + text.slice(-5)
+  // add 0 if value < 10; Example: 2 => 02
+  if (hours < 10) { hours = `0${hours}`; }
+  if (minutes < 10) { minutes = `0${minutes}`; }
+  if (seconds < 10) { seconds = `0${seconds}`; }
+
+  return `${hours}:${minutes}:${seconds}`; // Return is HH : MM : SS
+}
+
+const textEllipsis = (text: string, start: number = 5, end: number = 5) => {
+  if (text.length > (start + end)) {
+    return `${text.slice(0, start)}...${text.slice(-1 * end)}`
   }
 
-  return tempText
+  return text;
 }
 
-export const ellipsis = (address: string, start: number = 6) => {
-  let tempText = address
-
-  if (address.length > (start + 7)) {
-    tempText = `${address.slice(0, start)}...${address.slice(-4)}`
-  }
-
-  return tempText
+const toLanguageFormat = (number: number): string => {
+  return number?.toLocaleString('en-US', { maximumFractionDigits: 2 });
+  // return number.toLocaleString('fi-FI', { maximumFractionDigits: 2 });
 }
 
-export const byte32code = (code: string): boolean => {
-  try {
-    if (code.length !== 66 || !code.startsWith("0x")) {
-      return false
-    }
+export {
+  toBigNum,
+  fromBigNum,
 
-    const str = ethers.utils.parseBytes32String(code)
-    return true
-  } catch (err: any) {
-    console.log(err)
-    return false
-  }
-}
+  getSeed,
+  byte32code,
 
-export const getSeed = (address: string) => {
-  const accountNum = Number(address) || 0
-  const zeroNumber = Number("0xffffffffffffffffffffffffffffffffffffffffff")
-  return Math.round(accountNum / zeroNumber * 10000000)
-}
-
-
-/**
- * change data type from number to BigNum
- * @param {number} value - data that need to be change
- * @param {number} d - decimals
- */
-export const toBigNum = (value: string | number, d: number | undefined = 18) => {
-  return ethers.utils.parseUnits(Number(value).toFixed(d), d);
-}
-
-/**
-* change data type from BigNum to number
-* @param {ethers.BigNum} value - data that need to be change
-* @param {number} d - decimals
-*/
-export const fromBigNum = (value: any, d: number | undefined = 18) => {
-  return parseFloat(ethers.utils.formatUnits(value, d));
+  tips,
+  textCopy,
+  convertHMS,
+  textEllipsis,
+  toLanguageFormat,
 }

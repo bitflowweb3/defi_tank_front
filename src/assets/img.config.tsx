@@ -1,8 +1,5 @@
-import React from 'react'
-
 import bgImg from "./image/back.webp"
 import logoImg from "./image/tanklogo.png"
-
 
 const imgConfig = {
   bgImg,

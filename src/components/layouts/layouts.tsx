@@ -1,62 +1,46 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
 
 import './layouts.scss'
 import { Header } from "./header";
-import { imgConfig } from "assets/img.config";
 import { Sidebar } from "./sidebar/sidebar";
+import { imgConfig } from "assets/img.config";
+import { ScrollWrapper } from "components/scrollbar";
 
-export const Layouts = ({ children }: ComPropsObject) => {
+const BgWrapper = () => {
+  return (
+    <div className="fixed top-0 left-0 -z-1 w-full h-full bg-mainBg">
+      <img alt="" src={imgConfig.bgImg} className="fixed top-0 left-0 opacity-90 w-full h-full object-cover" />
+      <div className="fixed top-0 left-0 opacity-70 w-full h-full bg-mainBg" />
+    </div>
+  )
+}
+
+const Layouts = ({ children }: ComPropsObject) => {
   return (
     <div className="w-screen h-screen flex flex-col overflow-hidden">
-      <BackgroundTag>
-        <BackgroundImageTag src={imgConfig.bgImg} alt="" />
-        <BackgroundColorTag />
-      </BackgroundTag>
+      <BgWrapper />
 
       <div className="flex-1 flex flex-row overflow-hidden">
         <Sidebar />
 
-        <div className="flex-1 flex flex-col overflow-hidden px-10 sm:px-30">
+        <div className="flex-1 flex flex-col overflow-hidden">
           <Header />
 
-          <div className="relative flex-1 flex flex-col overflow-hidden">
-            <div className="absolute w-full h-full overflow-x-hidden overflow-y-auto">
-              {children}
-            </div>
-          </div>
+          <ScrollWrapper id="fullscreen-container">
+            {children}
+          </ScrollWrapper>
         </div>
       </div>
     </div>
   )
 }
 
-const BackgroundTag = styled("div")(({ theme }) => ({
-  backgroundColor: "#6e120066",
-  position: "fixed",
-  left: 0,
-  top: 0,
-  width: "100%",
-  height: "100%",
-  zIndex: -1,
-}))
+const GlobalSpacing = ({ children, className, ...props }: any) => {
+  return (
+    <div className={`p-10 sm:px-30 sm:py-20 ${className}`} {...props}>
+      {children}
+    </div>
+  )
+}
 
-const BackgroundImageTag = styled("img")(({ theme }) => ({
-  position: "fixed",
-  left: 0,
-  top: 0,
-  width: "100%",
-  height: "100%",
-  objectFit: "cover",
-  opacity: "0.9",
-}))
-
-const BackgroundColorTag = styled("div")(({ theme }) => ({
-  backgroundColor: "#6e120066",
-  position: "fixed",
-  left: 0,
-  top: 0,
-  opacity: "0.7",
-  width: "100%",
-  height: "100%",
-}))
+export { Layouts, GlobalSpacing }

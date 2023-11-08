@@ -5,17 +5,19 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import { byte32code } from "utils/util";
 
-export const Refcode = () => {
+const Refcode = () => {
   const { code } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (byte32code(code || "")) {
       window.localStorage.setItem("tank.refcode", code || "0");
-      navigate('/create')
+      navigate('/create-nfts')
     }
   }, [code])
 
 
   return <></>
 }
+
+export { Refcode }

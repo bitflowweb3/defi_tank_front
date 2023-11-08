@@ -1,121 +1,73 @@
 import React from 'react';
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useState, useMemo, useCallback } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { Box, Stack, TextField, Grid, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 
 import { useGlobalContext } from '../../provider';
-import { TankItemCard } from '../../components/tankCard';
-import { Layouts } from '../../components/layouts/layouts';
+import { ManageNFTs } from './manageNFTs/manageNFTs';
 import { ProfilePanel } from '../../components/profile/profile';
+import { GlobalSpacing, Layouts } from '../../components/layouts/layouts';
+import { restApi } from 'provider/restApi';
 
-export const UserPage = () => {
+const initProfile: UserObject = {
+  status: 'init',
+  name: "Please enter display name",
+  email: "player@gmail.com",
+  address: "",
+  description: "Player",
+
+  image: "",
+  coverImage: "",
+  links: [],
+
+  golds: 0,
+  experience: 0,
+
+  merit: 0,
+  potion: 0,
+  follows: 0,
+  ranking: -1,
+  borrowCount: 0,
+}
+
+const UserPage = () => {
   const { address } = useParams();
   const [state] = useGlobalContext();
-  const tempAddr = address || state.account
+  const [userData, setUserData] = useState<UserObject>(initProfile);
+  const tempAddr = address || state.account;
 
-  const [filter, setFilter] = useState("");
-  const [type, setType] = useState("All");
-  const [renderCount, setRendCount] = useState(10);
-  const [hasMore, setHasMore] = useState(true);
-
-  const fetchMore = () => {
-    setRendCount(renderCount + 10);
-  }
-
-  const typeFilter = useCallback((item: NftTankObject) => {
-    switch (type) {
-      case "All":
-        return true
-      case "Lended":
-        return item.borrower !== tempAddr
-      case "OnMine":
-        return item.borrower === tempAddr
+  useEffect(() => {
+    if (state.walletStatus === 2) {
+      updateUserData()
+    } else if (userData.status !== 'init') {
+      setUserData(initProfile)
     }
+  }, [state.walletStatus])
 
-    return item
-  }, [type, tempAddr])
-
-  const myTanks = useMemo(() => {
-    let items = state.tankItems.filter((tankItem: NftTankObject) => {
-      const ownerFlag = tankItem.owner === tempAddr
-      const borrowerFlag = tankItem.borrower === tempAddr
-
-      return ownerFlag || borrowerFlag
-    }).filter((item: NftTankObject) => {
-      return item.name.indexOf(filter.toLowerCase().trim()) > -1
-    }).filter(typeFilter)
-
-    let renderItems = items.slice(0, renderCount)
-    if (renderItems.length === items.length) setHasMore(false);
-    else setHasMore(true)
-
-    return renderItems
-  }, [tempAddr, state.tankItems, filter, renderCount])
+  const updateUserData = async () => {
+    try {
+      const tempData = await restApi.getProfile(tempAddr)
+      setUserData(tempData)
+    } catch (err) {
+      if (userData.status !== 'init') {
+        setUserData(initProfile)
+      }
+    }
+  }
 
   return (
     <Layouts>
-      <ProfilePanel address={tempAddr} />
-
-      <Stack spacing={2}
-        marginTop="30px"
-        alignItems="center"
-        justifyContent="space-between"
-        direction={{ xs: "column", sm: "row" }}
-      >
-        <TextField label="Search"
-          variant="outlined" value={filter}
-          onChange={(e: any) => setFilter(e.target.value)}
-          sx={{
-            flex: 1,
-            maxWidth: "600px",
-            borderRadius: '5px',
-            width: { xs: "100%" },
-            backgroundColor: '#00000075',
-          }}
+      <GlobalSpacing className="flex flex-col gap-30">
+        <ProfilePanel address={tempAddr}
+          updateUserData={updateUserData}
+          userData={userData}
         />
-
-        <FormControl
-          size="medium"
-          sx={{
-            flex: 1,
-            maxWidth: "400px",
-            borderRadius: '5px',
-            width: { xs: "100%" },
-            backgroundColor: '#00000075',
-          }}
-        >
-          <InputLabel id="sort-select">
-            Type
-          </InputLabel>
-
-          <Select label="Type"
-            labelId="sort-select" value={type}
-            onChange={(e: any) => setType(e.target.value)}
-          >
-            <MenuItem style={{ backgroundColor: '#000000a8', padding: '0.6rem 1rem', borderBottom: '1px solid #222' }} value={"All"}>All</MenuItem>
-            <MenuItem style={{ backgroundColor: '#000000a8', padding: '0.6rem 1rem', borderBottom: '1px solid #222' }} value={"Lended"}>Lended</MenuItem>
-            <MenuItem style={{ backgroundColor: '#000000a8', padding: '0.6rem 1rem', borderBottom: '1px solid #222' }} value={"OnMine"}>OnMine</MenuItem>
-          </Select>
-        </FormControl>
-      </Stack>
-
-      <InfiniteScroll
-        next={fetchMore}
-        hasMore={hasMore}
-        dataLength={myTanks.length}
-        loader={<Typography>Loading...</Typography>}
-      >
-        <Grid container spacing={2} sx={{ mt: 1 }}>
-          {myTanks.map((tankItem: NftTankObject, key: number) => (
-            <Grid key={key} item
-              xs={12} sm={6} md={6} lg={4} xl={2.4}
-            >
-              <TankItemCard item={tankItem} />
-            </Grid>
-          ))}
-        </Grid>
-      </InfiniteScroll>
+        <ManageNFTs address={tempAddr}
+          updateUserData={updateUserData}
+          userData={userData}
+        />
+      </GlobalSpacing>
     </Layouts>
   )
 }
+
+export { UserPage, initProfile }
