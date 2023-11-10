@@ -6,6 +6,8 @@ import { useGlobalContext } from "provider";
 import { menuStyle } from "components/styles";
 import { GuildItemCard } from "components/guildCard";
 
+import SearchIcon from '@mui/icons-material/Search';
+
 const ManageGuilds = ({ address }) => {
   const [state] = useGlobalContext();
   const [type, setType] = useState("All");
@@ -51,26 +53,23 @@ const ManageGuilds = ({ address }) => {
 
   return (
     <div className="flex-1 flex flex-col gap-10">
-      <Stack gap={2}
-        direction={{ xs: "column", sm: "row" }}
-        className="items-center justify-between"
-      >
-        <TextField label="Search" variant="outlined"
-          value={filter} onChange={onChangeFilter}
-          className="flex-1 max-w-600 w-full rounded-5 bg-inputBg"
-        />
+      <div className="card flex justify-between gap-20 mt-10 mb-10">
+        <div className="search-input">
+          <div className="icon">
+            <SearchIcon className="text-20"/>
+          </div>
+          <input type = "text" placeholder="Search" value={filter} onChange={onChangeFilter} className="search"/>
+        </div>
 
-        <FormControl size="medium" className="flex-1 max-w-400 w-full rounded-5 bg-inputBg">
+        <FormControl size="medium" className="w-full sm:max-w-400 rounded-15">
           <InputLabel id="sort-select">Type</InputLabel>
-
-          <Select label="Type" labelId="sort-select" value={type} onChange={onChangeType}>
-            <MenuItem style={menuStyle} value={"All"}>All</MenuItem>
-            <MenuItem style={menuStyle} value={"Member"}>Member</MenuItem>
-            <MenuItem style={menuStyle} value={"OnMine"}>OnMine</MenuItem>
+          <Select label="Sort" labelId="sort-select" value={type} onChange={onChangeType}>
+          <MenuItem style={menuStyle} value={"All"}>All</MenuItem>
+          <MenuItem style={menuStyle} value={"Member"}>Member</MenuItem>
+          <MenuItem style={menuStyle} value={"OnMine"}>OnMine</MenuItem>
           </Select>
         </FormControl>
-      </Stack>
-
+      </div>
       <Grid container spacing={2}>
         {userGuilds.map((guildItem: GuildObject, key: number) => (
           <Grid key={key} item xs={12} sm={6} md={6} lg={4} xl={3}>

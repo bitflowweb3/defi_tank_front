@@ -128,7 +128,7 @@ const TopGuilds = ({ guilds, rewardTime }: TopGuildsProps) => {
         </Box>
       </Stack>
 
-      <Grid container spacing={1}>
+      <Grid container spacing={1} className="mt-10">
         {topGuilds.map((guild: LeaderBoardObject, index: number) => (
           <Grid item xs={12} md={4} lg={3} key={index}>
             <RoundItem
@@ -141,11 +141,12 @@ const TopGuilds = ({ guilds, rewardTime }: TopGuildsProps) => {
         ))}
       </Grid>
 
-      <Grid container spacing={2} >
+      <Grid container spacing={2} className="mt-10">
         <Grid item xs={12}>
           <TextField label="Search" variant="outlined"
             value={filter} onChange={onChangeFilter}
-            className="w-full bg-inputBg rounded-5"
+            className="w-full  rounded-5"
+            style={{background: 'rgba(31,31,31,0.9)'}}
           />
         </Grid>
       </Grid>
@@ -158,7 +159,7 @@ const TopGuilds = ({ guilds, rewardTime }: TopGuildsProps) => {
           columns={columns}
           rowsPerPageOptions={[10]}
           getRowId={(row) => row.rank}
-          style={{ borderRadius: '10px', backgroundColor: '#000000a1' }}
+          style={{ borderRadius: '10px', backgroundColor: 'rgba(31,31,31,0.9)' }}
         />
       </Box>
     </Box>

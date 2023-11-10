@@ -73,7 +73,7 @@ const PropertyPanel = ({ item, classInfo }: { item: NftTankObject, classInfo: Ta
       {properties.map((property: any, key: number) => (
         <Stack direction="row" key={key}
           className="items-center justify-between p-10"
-          sx={{ borderRadius: 2, borderColor: "#444", border: "1px solid" }}
+          sx={{ borderRadius: 2,  border: "1px solid #333" }}
         >
           <Stack direction="row" gap={1} className="items-center justify-start">
             <img alt="" src={property.icon} className="w-30 text-center" />
@@ -220,9 +220,9 @@ const TankDetail = () => {
     <Layouts>
       <GlobalSpacing className="flex-1 flex flex-col gap-10 md:gap-20 lg:gap-30">
         <div className="flex flex-row">
-          <ActionButton2 onClick={() => { navigate(-1) }}>
+          <ActionButton1 onClick={() => { navigate(-1) }}>
             <ArrowBackIcon /> back
-          </ActionButton2>
+          </ActionButton1>
         </div>
 
         <div className="flex-1 flex flex-col lg:flex-row gap-20 lg:gap-50 justify-evenly p-30 lg:p-50 bg-boxBg rounded-12">

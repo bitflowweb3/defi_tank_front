@@ -16,7 +16,7 @@
         border-radius: 1rem;
         padding: 1rem 2rem 1rem 4rem;
         transform: translateX(-71px) translateY(15px);
-        background: linear-gradient(to right, #00000015, #000000dd);
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.0823529412), rgb(63 62 62 / 87%));
     }
 
     @media (max-width: variable.$md) {
@@ -33,8 +33,7 @@
 .rewardItem-wrapper {
     align-items: center;
     justify-content: space-between;
-
-    padding: 8px;
+    padding: 12px;
     border-radius: 8px;
-    background: linear-gradient(to right, #c76e36 30%, #c76e3650);
+    background: rgb(31,31,31);
 }

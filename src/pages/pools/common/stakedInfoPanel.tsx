@@ -6,8 +6,9 @@ import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import { tips, toLanguageFormat } from "utils/util";
 import { useGlobalContext } from "provider";
 import { apiNotification } from "utils/services";
-import { ActionLoadingButton1 } from "components/buttons";
+import { ActionButton1, ActionButton2, ActionLoadingButton1 } from "components/buttons";
 import { ValidateError } from "utils/customError";
+import { Link } from "react-router-dom";
 const tempArray = new Array(10).fill(0)
 
 const StakedInfoPanel = () => {
@@ -39,81 +40,104 @@ const StakedInfoPanel = () => {
   }
 
   return (
-    <Stack direction={{ xs: "column", xl: "row" }} gap={3} className="justify-between">
-      <Box className="flex-1 text-center" sx={{ maxWidth: { xs: "100%", xl: "50%" } }}>
-        <Typography style={{ transform: 'translateY(60px)' }}>
-          APY ({Number(state.poolsInfo.apy).toFixed(3)}%)
-        </Typography>
-
-        <ResponsiveContainer height={300} debounce={30}>
-          <LineChart data={data} margin={{ left: -10, right: 30, top: 0, bottom: 5 }}>
-            <XAxis dataKey="day" stroke={"white"} />
-            <YAxis dataKey="rate" stroke={"white"} />
-
-            <Line dot={true}
-              type="monotone"
-              dataKey="rate"
-              stroke={"#c14b05"}
-              strokeWidth={2}
-              activeDot={true}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </Box>
-
-      <Stack direction="column" gap={2} className="flex-1 justify-center">
+    <InfoBox>
+      <StyledApyBox>
+        <div>
+          <Typography style={{fontSize: '22px', color: 'rgba(255, 255, 255, 0.5)'}}>
+              TOTAL APY
+          </Typography>
+          <Typography style={{fontSize: '20px', fontWeight: 600, color: 'rgba(255,255,255,1)'}}>
+            ({Number(state.poolsInfo.apy).toFixed(3)}%)
+          </Typography>
+          <Link to = "/create-nfts" >
+            <ActionButton2 className="mt-10">Buy DFTL</ActionButton2>
+          </Link>
+        </div>
+      </StyledApyBox>
+      <StyledInfoBox>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
-            <InfoBox gap={1} className="items-center justify-center">
-              <Typography variant="h6">Total Capacity</Typography>
-              <Typography variant="body1">{toLanguageFormat(state.poolsInfo.totalCapacity)}</Typography>
-            </InfoBox>
+            <Grid item xs={12} md={4}>
+              <InfoBox gap={1} className="items-center justify-center">
+                <Typography style={{fontSize: '12px', color: 'rgba(255,255,255, 0.5)'}}>Total Capacity</Typography>
+                <Typography variant="body1">{toLanguageFormat(state.poolsInfo.totalCapacity)}</Typography>
+              </InfoBox>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <InfoBox gap={1} className="items-center justify-center">
+                <Typography style={{fontSize: '12px', color: 'rgba(255,255,255, 0.5)'}}>Total Staked</Typography>
+                <Typography variant="body1">{toLanguageFormat(state.poolsInfo.totalStaked)} DFTL</Typography>
+              </InfoBox>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <InfoBox gap={1} className="items-center justify-center">
+                <Typography style={{fontSize: '12px', color: 'rgba(255,255,255, 0.5)'}}>Total Guilds</Typography>
+                <Typography variant="body1">{toLanguageFormat(state.guildDatas.length)}</Typography>
+              </InfoBox>
+            </Grid>
           </Grid>
-
-          <Grid item xs={12} md={4}>
-            <InfoBox gap={1} className="items-center justify-center">
-              <Typography variant="h6">Total Staked</Typography>
-              <Typography variant="body1">{toLanguageFormat(state.poolsInfo.totalStaked)} DFTL</Typography>
-            </InfoBox>
+      </StyledInfoBox>
+      <StyledApyBox>
+        <div>
+          <Typography style={{fontSize: '22px', color: 'rgba(255, 255, 255, 1)'}}>
+            Your staking rewards
+          </Typography>
+          <Grid container spacing={2} className="mt-10">
+            <Grid item xs={12} md={6}>
+              <Typography style={{fontSize: '22px', color: 'rgba(255, 255, 255, 0.5)'}}>
+                ETH
+              </Typography>
+              <Typography style={{fontSize: '20px', fontWeight: 600, color: 'rgba(255,255,255,1)'}}>
+                {toLanguageFormat(state.stakeRewards.rewardETH)}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography style={{fontSize: '22px', color: 'rgba(255, 255, 255, 0.5)'}}>
+                DFTL
+              </Typography>
+              <Typography style={{fontSize: '20px', fontWeight: 600, color: 'rgba(255,255,255,1)'}}>
+                {toLanguageFormat(state.stakeRewards.rewardDFTL)}
+              </Typography>
+            </Grid>
           </Grid>
-
-          <Grid item xs={12} md={4}>
-            <InfoBox gap={1} className="items-center justify-center">
-              <Typography variant="h6">Total Guilds</Typography>
-              <Typography variant="body1">{toLanguageFormat(state.guildDatas.length)}</Typography>
-            </InfoBox>
-          </Grid>
-        </Grid>
-
-        <InfoBox gap={1} className="border-2 border-solid border-btnBg">
-          <Typography variant="h5">Staked Reward</Typography>
-
-          <Box gap={2} className="flex justify-between">
-            <Stack direction="column">
-              <Typography>{toLanguageFormat(state.stakeRewards.rewardETH)} ETH</Typography>
-              <Typography>{toLanguageFormat(state.stakeRewards.rewardDFTL)} DFTL</Typography>
-            </Stack>
-
-            <div className="flex items-center">
-              <ActionLoadingButton1 className="py-8" loading={loading} onClick={onClaimReward}
-                disabled={!state.stakeRewards.rewardETH && !state.stakeRewards.rewardDFTL}
-              >
-                Claim Reward
-              </ActionLoadingButton1>
-            </div>
-          </Box>
-        </InfoBox>
-      </Stack>
-    </Stack >
+          <ActionLoadingButton1 className="py-8 mt-10" loading={loading} onClick={onClaimReward}
+            disabled={!state.stakeRewards.rewardETH && !state.stakeRewards.rewardDFTL}
+          >
+            Claim Reward
+          </ActionLoadingButton1>
+        </div>
+      </StyledApyBox>
+    </InfoBox >
   )
 }
 
+
+
+const StyledApyBox = styled(Stack)(({ theme }) => ({
+  borderRadius: '16px',
+  border: '1px solid rgba(250, 105, 0, 0.85)',
+  padding: '32px 16px',
+  width: '100%',
+  textAlign: 'center',
+  display: 'flex'
+}))
+
+const StyledInfoBox = styled(Stack)(({ theme }) => ({
+    borderRadius: '16px',
+    border: '1px solid rgba(255, 255, 255, 1)',
+    padding: '20px 16px',
+    width: '100%',
+    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    margin: '32px 0'
+}))
+
+
 const InfoBox = styled(Stack)(({ theme }) => ({
-  padding: "30px",
-  borderRadius: "20px",
-  backgroundColor: "#060200b5",
-  // border: `3px solid ${theme.palette.primary.light}`,
-  // justifyContent: 'space-evenly',
+  width: '100%',
 }))
 
 export { StakedInfoPanel }

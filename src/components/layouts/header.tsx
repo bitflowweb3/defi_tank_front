@@ -17,6 +17,9 @@ import { HeaderButton, HeaderLink } from "../buttons";
 import { Notification } from "../notification/notification";
 import { toLanguageFormat } from "utils/util";
 
+
+import { imgConfig } from "assets/img.config";
+
 const Header = () => {
   const [state, { dispatch, connectToMetamask, disconnectMetamask }] = useGlobalContext();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -34,7 +37,13 @@ const Header = () => {
   }
 
   return (
-    <Toolbar className="">
+    <Toolbar className="bg-header header">
+      <Link className="logo" to = "/">
+        <img alt="" src={imgConfig.logoImg}
+          className="aspect-square text-center" style={{width: '56px', height: 'auto'}}
+        />
+        DefiTankLand
+      </Link>
       <div className="flex-1 flex flex-row items-center px-10 sm:px-30">
         <IconButton edge="start" color="primary"
           sx={{ display: { sm: "none" } }}
@@ -77,6 +86,7 @@ const Header = () => {
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             PaperProps={{
               elevation: 0,
+              
               sx: {
                 overflow: 'visible',
                 mt: 1,
@@ -101,25 +111,25 @@ const Header = () => {
               },
             }}
           >
-            <div className="w-auto md:w-200 flex flex-col">
-              <Link to="/profile" className="flex flex-row gap-10 items-center px-10 py-5 hover:bg-menuBg hover:text-white">
+            <div className="w-auto md:w-200 flex flex-col ">
+              <Link to="/profile" className="flex flex-row gap-10 items-center user-menu px-10 py-5 hover:bg-menuBg hover:text-white">
                 <Person2OutlinedIcon fontSize="medium" />
                 <div className="text-15 font-semibold">Profile</div>
               </Link>
 
-              <Link to="/referral" className="flex flex-row gap-10 items-center px-10 py-5 hover:bg-menuBg hover:text-white">
+              <Link to="/referral" className="flex flex-row gap-10 items-center user-menu px-10 py-5 hover:bg-menuBg hover:text-white">
                 <OnlinePredictionIcon fontSize="medium" />
                 <div className="text-15 font-semibold">Referral</div>
               </Link>
 
-              <Divider />
+              <Divider className="mb-10 mt-10"/>
 
-              <Link to="/create-nfts" className="flex flex-row gap-10 items-center px-10 py-5 hover:bg-menuBg hover:text-white">
+              <Link to="/create-nfts" className="flex flex-row gap-10 items-center user-menu px-10 py-5 hover:bg-menuBg hover:text-white">
                 <PhotoOutlinedIcon fontSize="small" />
                 <div className="text-15 font-semibold">Shop</div>
               </Link>
 
-              <div onClick={disconnectMetamask} className="flex flex-row gap-10 items-center px-10 py-5 hover:bg-menuBg hover:text-white cursor-pointer">
+              <div onClick={disconnectMetamask} className="flex flex-row gap-10 items-center user-menu px-10 py-5 hover:bg-menuBg hover:text-white cursor-pointer">
                 <Logout fontSize="small" />
                 <div className="text-15 font-semibold">Disconnect</div>
               </div>

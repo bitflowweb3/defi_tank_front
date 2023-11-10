@@ -3,8 +3,7 @@ import Jazzicon from 'react-jazzicon';
 import { LoadingButton } from "@mui/lab";
 import { useEffect, useState } from "react";
 import { Box, TextField, Stack, Paper, IconButton, Typography } from "@mui/material";
-
-import userTempCoverImg from "../../assets/image/tank55.webp";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { useGlobalContext } from "../../provider";
 import { restApi } from "../../provider/restApi";
 import { getSeed, tips } from "../../utils/util";
@@ -134,7 +133,7 @@ const EditProfile = (props: PropsObject) => {
     <Box sx={styleWrapper} style={{ borderRadius: '12px' }}>
       <Box sx={styleContainer}>
         <Stack className="relative" direction="column" gap="10px">
-          <ItemContainer >
+          <ItemContainer className="gap-30 middle">
             <Stack alignItems="center" direction="column">
               <Box sx={{ position: "relative" }}>
                 {image ? (
@@ -142,15 +141,15 @@ const EditProfile = (props: PropsObject) => {
                     src={image}
                     component="img"
                     sx={{
-                      width: "100px",
-                      height: "100px",
+                      width: "180px",
+                      height: "180px",
                       objectFit: "cover",
-                      borderRadius: "50%",
+                      borderRadius: "18px",
                     }}
                   />
                 ) : (
                   // @ts-ignore
-                  <Jazzicon diameter={100} seed={getSeed(address)} />
+                  <Jazzicon diameter={180} seed={getSeed(address)} />
                 )}
 
                 <IconButton color="primary"
@@ -163,7 +162,6 @@ const EditProfile = (props: PropsObject) => {
                     accept="image/*"
                     onChange={HandleImageChange}
                   />
-
                   <Paper />
                 </IconButton>
               </Box>
@@ -172,6 +170,17 @@ const EditProfile = (props: PropsObject) => {
                 <Typography>Please Set Image</Typography>
               )}
             </Stack>
+            <div style={{flex: 1}}>
+              <TextField required label="Name" className="mt-20 rounded-20"
+                onChange={({ target }) => setName((target.value).trim())}
+                sx={inputstyle} value={name}
+              />
+
+              <TextField required label="Email" type="email" className="mt-20"
+                onChange={({ target }) => setEmail((target.value).trim())}
+                sx={inputstyle} value={email}
+              />
+            </div>
           </ItemContainer>
 
           {/* <ItemContainer>
@@ -204,18 +213,6 @@ const EditProfile = (props: PropsObject) => {
               )} */}
           {/* </Stack> */}
           {/* </ItemContainer> */}
-
-          <ItemContainer>
-            <TextField required label="Name"
-              onChange={({ target }) => setName((target.value).trim())}
-              sx={inputstyle} value={name}
-            />
-
-            <TextField required label="Email" type="email"
-              onChange={({ target }) => setEmail((target.value).trim())}
-              sx={inputstyle} value={email}
-            />
-          </ItemContainer>
 
           <ItemContainer>
             <TextField required label="Password" type="password"
@@ -258,11 +255,13 @@ const EditProfile = (props: PropsObject) => {
               onClick={HandleSubmit} loading={loading}
               className="hover:opacity-75"
               style={{
-                width: '100%',
+                width: '70%',
                 padding: '1rem',
+                margin: '0 auto',
                 fontWeight: '700',
-                backgroundColor: '#a14e22',
-                // color: 'white'
+                borderRadius: '16px',
+                backgroundColor: 'rgba(250, 105, 0, 0.85)',
+                color: 'white'
               }}
             >
               Submit
@@ -270,6 +269,23 @@ const EditProfile = (props: PropsObject) => {
           </ItemContainer>
         </Stack>
       </Box>
+      <div onClick={() => {setModal(false)}} style={{
+        position:'absolute',
+        top: '-15px',
+        right: '-15px',
+        boxShadow: '0px 4px 16px 0px rgba(0, 0, 0, 0.1)',
+        background: 'rgb(66,66,66)',
+        color: 'white',
+        cursor: 'pointer',
+        width: '50px',
+        height: '50px',
+        borderRadius: '50%',
+        display:'flex',
+        alignItems:'center',
+        justifyContent:'center'
+      }}>
+        <CloseOutlinedIcon className="text-30" />
+      </div>
     </Box>
   )
 }

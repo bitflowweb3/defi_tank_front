@@ -36,14 +36,15 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 
   [`& .${tooltipClasses.arrow}`]: {
-    color: "#060200e3",
+    color: "rgba(36, 36, 36, 1)",
   },
 
   [`& .${tooltipClasses.tooltip}`]: {
     color: "#ccad45",
-    backgroundColor: "#060200e3",
+    backgroundColor: "rgba(36, 36, 36, 1)",
     padding: "15px 20px",
   }
+
 })
 
 export { CustomTooltip };

@@ -30,12 +30,12 @@ const theme = createTheme({
   },
   palette: {
     mode: "dark",
-    primary: { main: "#fff", light: "#f55b00", dark: "#060200e3" },
+    primary: { main: "#fff", light: "#f55b00", dark: "rgba(36, 36, 36, 1)" },
     secondary: { main: "#55322c", light: "#ccad45", dark: "#1e0500" },
     error: { main: "#da2607" },
     warning: { main: "#e9cf1c" },
     text: { primary: "#ffffff", secondary: "#e9e8e8" },
-    background: { paper: "#060200e3" }
+    background: { paper: "rgba(36, 36, 36, 1)" }
   },
   typography: {
     allVariants: {

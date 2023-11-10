@@ -18,8 +18,8 @@ const CreateNFTs = () => {
     <Layouts>
       <div className="basetap-wrapper">
         <GlobalSpacing className="sm:py-0 py-0">
-          <Box className='border-b border-white/50'>
-            <Tabs value={value} onChange={onChangeTap} aria-label="">
+          <Box>
+            <Tabs value={value} onChange={onChangeTap} aria-label="" TabIndicatorProps={{style: {display: 'none'}}} >
               <TapHeader value="tank" label="Create Tank" />
               <TapHeader value="guild" label="Create Guild" />
               <TapHeader value="assets" label="Buy Assets" />
@@ -34,7 +34,6 @@ const CreateNFTs = () => {
         <CustomTabPanel value="guild" index={value}>
           <CreateGuild />
         </CustomTabPanel>
-
         <CustomTabPanel value="assets" index={value}>
           <BuyAssets />
         </CustomTabPanel>

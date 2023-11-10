@@ -38,8 +38,8 @@ const RewardsPage = () => {
     <Layouts>
       <div className="basetap-wrapper">
         <GlobalSpacing className="sm:py-0 py-0">
-          <Box className='border-b border-white/50'>
-            <Tabs value={value} onChange={onChangeTap} aria-label="">
+          <Box className=''>
+            <Tabs value={value} onChange={onChangeTap} aria-label=""  TabIndicatorProps={{style: {display: 'none'}}} >
               <TapHeader value="topPlayers" label="Top Players" />
               <TapHeader value="topGuilds" label="Top Guilds" />
             </Tabs>

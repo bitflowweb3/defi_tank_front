@@ -71,13 +71,13 @@ const AssetCard = (props: AssetCardProps) => {
 }
 
 const CardContainer = styled(Card)(({
-  borderWidth: '3px',
-  borderStyle: 'solid',
+  // borderWidth: '3px',
+  // borderStyle: 'solid',
   borderRadius: '5px',
   padding: "1.5rem 1rem 1rem",
-  backgroundColor: '#0a0300fc',
-  borderImage: 'linear-gradient(to top, #6c3200, #ff570000) 1',
-
+  backgroundColor: 'rgba(36, 36, 36, 1)',
+  background: 'rgba(36, 36, 36, 1)',
+  // borderImage: 'linear-gradient(to top, #6c3200, #ff570000) 1',
   height: '100%',
   display: 'flex',
   flexDirection: 'column',

@@ -33,7 +33,7 @@ const ChampionBadgeContainer = styled(Stack)(({ theme }) => ({
 const BorderLinearProgress = styled(LinearProgress)(() => ({
     height: 10,
     borderRadius: 10,
-    border: '1px solid #777',
+    border: '1px solid #444',
     [`&.${linearProgressClasses.colorPrimary}`]: {
         backgroundColor: "transparent",
     },

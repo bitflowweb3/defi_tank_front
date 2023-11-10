@@ -1,10 +1,15 @@
 .profile-menu-wrapper {
     .MuiPaper-root {
-        background-color: #140f0c !important;
-        filter: drop-shadow(#140f0ce1 0px 0px 10px);
-
+        background-color: rgba(46,46,46,1) !important;
+        filter: drop-shadow(rgba(31,31,31,1) 0px 0px 10px);
+        padding: 8px;
         &::before {
-            background-color: #140f0c !important;
+            background-color: rgba(46,46,46,1) !important;
         }
+    }
+        
+    .user-menu
+    {
+        padding: 8px;
     }
 }

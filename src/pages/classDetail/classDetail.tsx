@@ -122,7 +122,6 @@ const TankClassDetail = () => {
             <Typography variant="h4">{tankClass.name}</Typography>
             <Typography>{tankClass.description}</Typography>
 
-
             <div className="flex flex-col-reverse md:flex-row gap-20 justify-between">
               <Stack spacing={2} direction="column">
                 <Typography>Price : {tankClass.price} DFTL</Typography>

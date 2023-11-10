@@ -85,8 +85,8 @@ const TankItemCard = ({ item }: TankCardProps) => {
   }
 
   return (
-    <CardContainer>
-      <Stack direction="row" className='items-center justify-between mb-10'>
+    <CardContainer >
+      <Stack direction="row" className='items-center justify-between mb-10 px-10 py-10' >
         <Box className="max-w-400">
           {tankInfo.tankLevel}
         </Box>
@@ -100,7 +100,7 @@ const TankItemCard = ({ item }: TankCardProps) => {
 
       <Stack direction="column" className='relative' onClick={handleDetail}>
         <CardMedia alt="" component="img"
-          className='h-194 rounded-8 cursor-pointer'
+          className='h-194 cursor-pointer'
           image={tankInfo.image}
         />
 

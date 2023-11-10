@@ -10,7 +10,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useGlobalContext } from "provider";
 import { GridItem } from "components/grid";
 import { textEllipsis, tips, toLanguageFormat } from "utils/util";
-import { ActionButton1 } from "components/buttons";
+import { ActionButton1, ActionButton2 } from "components/buttons";
 import { apiNotification } from "utils/services";
 
 import baseGuild from "assets/image/baseguild.png";
@@ -55,69 +55,122 @@ const PoolItem = (props: PoolitemProps) => {
   }
 
   return (
-    <Accordion className="m-5"
-      expanded={expanded === `expand${index}`}
-      onChange={handleExpand(`expand${index}`)}
-    >
-      <AccordionSummary className="min-h-60">
-        <Grid container spacing={2} className="items-center">
-          <GridItem className="items-center">
-            <img alt=""
+    <StyledPoolItem>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={3} className="text-center" style={{borderRadius: '16px', borderRight: '1px solid rgba(255, 255, 255, 0.25)'}}>
+          <img alt=""
               src={guildData.image || baseGuild}
-              className="w-40 aspect-square text-center rounded-5"
-            />
+              className="aspect-square"
+              style={{borderBottomLeftRadius: '16px', borderBottomRightRadius: '16px'}}
+          />
+          <Typography className="pt-10" style={{fontSize: '24px', fontWeight: 700}}>
+            {guildData.name}
+          </Typography>
+           {/* <Typography>
+             {textEllipsis(guildData.owner, 15)}
+           </Typography> */}
+          <Typography className="py-10">
+           Id: {state.stakes[guildData.id] ? state.stakes[guildData.id] : "0"}
+          </Typography>
+        </Grid>
+        <Grid item xs={12} md={9} className="px-30">
+          <Typography className="pt-30" style={{fontSize: '12px',fontWeight: 600, color: 'rgba(255, 255, 255, 0.5)'}}>
+            GUILD STAKED
+          </Typography>
+          <Typography>
+            {toLanguageFormat(guildData.stakingPool)}/{toLanguageFormat(guildData.maxStakingPool)}
+          </Typography>
+            {state.walletStatus === 2 && (
+              <div className="pt-30">
+                    <NumberInputPanel label="DFTL"
+                      balance={state.balance}
+                      onAction={handleStake}
+                      actionLabel="Stake"
+                      max={maxAmount}
+                    />
+                    <div className="pt-30">
+                      <NumberInputPanel label="DFTL"
+                        balance={state.stakes[guildData.id] || 0}
+                        max={state.stakes[guildData.id] || 0}
+                        onAction={handleUnstake}
+                        actionLabel="Withdraw"
+                      />
+                    </div>
+              </div>
+            )}
 
-            <Typography className="pl-1r">
-              {guildData.name}
-            </Typography>
-          </GridItem>
+        </Grid>
+      </Grid> 
+    </StyledPoolItem>
+    // <Accordion className="m-5"
+    //   expanded={expanded === `expand${index}`}
+    //   onChange={handleExpand(`expand${index}`)}
+    // >
+    //   <AccordionSummary className="min-h-60">
+    //     <Grid container spacing={2} className="items-center">
+    //       <GridItem className="items-center">
+    //         <img alt=""
+    //           src={guildData.image || baseGuild}
+    //           className="w-40 aspect-square text-center rounded-5"
+    //         />
 
-          <GridItem>
-            <Typography>
-              {textEllipsis(guildData.owner, 15)}
-            </Typography>
-          </GridItem>
+    //         <Typography className="pl-1r">
+    //           {guildData.name}
+    //         </Typography>
+    //       </GridItem>
+    //       <GridItem>
+    //         <Typography>
+    //           {textEllipsis(guildData.owner, 15)}
+    //         </Typography>
+    //       </GridItem>
 
-          <GridItem>
-            <Typography>
-              {state.stakes[guildData.id] ? state.stakes[guildData.id] : "0"}
-            </Typography>
-          </GridItem>
+    //       <GridItem>
+    //         <Typography>
+    //           {state.stakes[guildData.id] ? state.stakes[guildData.id] : "0"}
+    //         </Typography>
+    //       </GridItem>
 
-          <GridItem>
-            <Typography>
-              {toLanguageFormat(guildData.stakingPool)}/{toLanguageFormat(guildData.maxStakingPool)}
-            </Typography>
-          </GridItem>
-        </Grid >
-      </AccordionSummary >
+    //       <GridItem>
+    //         <Typography>
+    //           {toLanguageFormat(guildData.stakingPool)}/{toLanguageFormat(guildData.maxStakingPool)}
+    //         </Typography>
+    //       </GridItem>
+    //     </Grid >
+    //   </AccordionSummary >
 
-      {state.walletStatus === 2 && (
-        <AccordionDetails>
-          <Grid container spacing={2} sx={{ padding: "20px" }}>
-            <Grid item xs={12} md={6} textAlign="center">
-              <NumberInputPanel label="DFTL"
-                balance={state.balance}
-                onAction={handleStake}
-                actionLabel="Stake"
-                max={maxAmount}
-              />
-            </Grid>
+    //   {state.walletStatus === 2 && (
+    //     <AccordionDetails>
+    //       <Grid container spacing={2} sx={{ padding: "20px" }}>
+    //         <Grid item xs={12} md={6} textAlign="center">
+    //           <NumberInputPanel label="DFTL"
+    //             balance={state.balance}
+    //             onAction={handleStake}
+    //             actionLabel="Stake"
+    //             max={maxAmount}
+    //           />
+    //         </Grid>
 
-            <Grid item xs={12} md={6} textAlign="center" >
-              <NumberInputPanel label="DFTL"
-                balance={state.stakes[guildData.id] || 0}
-                max={state.stakes[guildData.id] || 0}
-                onAction={handleUnstake}
-                actionLabel="Withdraw"
-              />
-            </Grid>
-          </Grid>
-        </AccordionDetails>
-      )}
-    </Accordion >
+    //         <Grid item xs={12} md={6} textAlign="center" >
+    //           <NumberInputPanel label="DFTL"
+    //             balance={state.stakes[guildData.id] || 0}
+    //             max={state.stakes[guildData.id] || 0}
+    //             onAction={handleUnstake}
+    //             actionLabel="Withdraw"
+    //           />
+    //         </Grid>
+    //       </Grid>
+    //     </AccordionDetails>
+    //   )}
+    // </Accordion >
   )
 }
+
+const StyledPoolItem = styled("div")(({ theme }) => ({
+  margin: "16px 0",
+  borderRadius: "16px",
+  overflow: 'hidden',
+  border: `1px solid rgba(255, 255, 255, 0.25)`,
+}))
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -155,6 +208,9 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }))
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
+  "MuiOutlinedInput-root": {
+    borderRadius: '16px'
+  },
   "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
     display: "none",
   },
@@ -209,45 +265,45 @@ const NumberInputPanel = ({ label, actionLabel, balance, max, onAction }: Number
 
   return (
     <Stack alignItems="center" spacing={2}>
-      <Box className="w-full flex">
-        <TextField type="number"
-          value={value}
-          onChange={handleInput}
-          label={`${label} : ${balance}`}
-          InputLabelProps={{ shrink: true }}
-          className="flex-1 max-w-500 mx-auto"
-        />
-      </Box>
-
-      <Box className="w-full flex">
+      <Grid container spacing={2} alignItems={"center"} className="relative">
+        <div className="w-full">
+          <TextField type="number"
+            value={value}
+            onChange={handleInput}
+            label={`${label} : ${balance}`}
+            InputLabelProps={{ shrink: true }}
+            className="w-full"
+          />
+        </div>
+        <div style={{position: 'absolute', right: '8px', top: '8px'}}>
+          <ActionButton2 disabled={isLoading} onClick={handleAction}>
+            {actionLabel}
+          </ActionButton2>
+          {isLoading && (
+            <CircularProgress size={24}
+              sx={{
+                top: '50%',
+                left: '50%',
+                position: 'absolute',
+                marginTop: '-12px',
+                marginLeft: '-12px',
+                color: "primary.main",
+              }}
+            />
+          )}
+        </div>
+      </Grid>
+      {/* <Box className="w-full flex">
         <Slider min={0} max={100}
           marks={marks}
           aria-label="Small"
           disabled={Number(max) === 0}
           value={Number(value * 100 / max) || 0}
           onChange={onChangeSlider}
-          className="flex-1 max-w-500 mx-auto"
+          className="flex-1 max-w-500"
         />
-      </Box>
+      </Box> */}
 
-      <Box className="relative w-full">
-        <ActionButton1 disabled={isLoading} onClick={handleAction}>
-          {actionLabel}
-        </ActionButton1>
-
-        {isLoading && (
-          <CircularProgress size={24}
-            sx={{
-              top: '50%',
-              left: '50%',
-              position: 'absolute',
-              marginTop: '-12px',
-              marginLeft: '-12px',
-              color: "primary.main",
-            }}
-          />
-        )}
-      </Box>
     </Stack>
   )
 }

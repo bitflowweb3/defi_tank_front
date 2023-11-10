@@ -12,8 +12,8 @@
   $scrollWidth : 5px;
   $scrollHeight: 10px;
   $scrollBG_track : #6e829c;
-  $scrollBG_thumb : #061d31;
-  $scrollColor : #26384c #eee7f8;
+  $scrollBG_thumb : rgba(66, 66, 66, 0.95);
+  $scrollColor : rgba(210, 210, 210, 1) #eeeeee;
 
   box-sizing: border-box;
   scrollbar-width: $scrollWidth;
@@ -90,7 +90,6 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-
   .MuiTabPanel-root {
     flex: 1;
     display: flex;

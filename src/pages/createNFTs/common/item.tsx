@@ -36,12 +36,11 @@ const TankItem = ({ item, setBuyItem }: ParamObject) => {
   }
 
   return (
-    <CardContainer>
+    <CardContainer style={{paddingBottom: '0.8rem'}}>
       <CardMedia alt="" component="img"
         image={item.image} onClick={handleDetail}
-        className='h-194 rounded-8 cursor-pointer'
+        className='h-194 cursor-pointer'
       />
-
       <CardContent>
         <Stack direction="row" className='items-center justify-between'>
           <Typography>{item.name}</Typography>

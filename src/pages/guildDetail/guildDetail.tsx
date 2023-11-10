@@ -125,6 +125,13 @@ const GuildDetail = () => {
 
         <div className="flex-1 flex flex-col  gap-20 lg:gap-50 p-30 lg:p-50 bg-boxBg rounded-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-50">
+            <div className="flex-1 flex flex-col items-center py-20">
+              <img alt=""
+                src={guildInfo.image || baseGuild}
+                style={{objectFit: 'cover'}}
+                className="max-h-400 w-full rounded-20"
+              />
+            </div>
             <div className="flex-1 flex flex-col gap-15 justify-around">
               <div className="flex flex-col gap-5">
                 <Typography variant="h4" className="first-letter:uppercase">
@@ -203,18 +210,11 @@ const GuildDetail = () => {
                 />
               </div>
             </div>
-
-            <div className="flex-1 flex flex-col items-center justify-center md:px-50 py-20">
-              <img alt=""
-                src={guildInfo.image || baseGuild}
-                className="max-h-400 w-full md:w-auto rounded-20"
-              />
-            </div>
           </div>
 
           <div className="basetap-wrapper gap-20">
-            <Box className='border-b border-white/50'>
-              <Tabs value={value} onChange={onChangeTap} aria-label="">
+            <Box className=''>
+              <Tabs value={value} onChange={onChangeTap} aria-label="" TabIndicatorProps={{style: {display: 'none'}}} >
                 <TapHeader value="members" label="Members" />
                 <TapHeader value="requests" label="Requests" />
               </Tabs>

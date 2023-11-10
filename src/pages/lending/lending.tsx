@@ -4,11 +4,14 @@ import { useState, useMemo, useCallback } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Stack, TextField, FormControl, InputLabel, MenuItem, Grid, Typography } from "@mui/material";
 
+import SearchIcon from '@mui/icons-material/Search';
+
 import { useGlobalContext } from "provider";
 import { TankItemCard } from "components/tankCard";
 import { GlobalSpacing, Layouts } from "components/layouts/layouts";
 import { ScrollWrapper } from "components/scrollbar";
 import { menuStyle } from "components/styles";
+import { CustomTabPanel } from "components/customTap";
 
 export const LendingPage = () => {
   const [state] = useGlobalContext();
@@ -85,20 +88,19 @@ export const LendingPage = () => {
 
   return (
     <Layouts>
-      <GlobalSpacing className="flex-1 flex flex-col gap-20">
-        <Stack spacing={2}
-          direction={{ xs: "column", sm: "row" }}
-          className="items-center justify-between"
-        >
-          <TextField label="Search" variant="outlined"
-            value={filter} onChange={onChangeFilter}
-            className="flex-1 max-w-600 w-ful bg-inputBg rounded-5"
-          />
+      <div className="px-30">
+       <div className="card flex justify-between gap-20  ">
+        <div className="search-input">
+          <div className="icon">
+            <SearchIcon className="text-20"/>
+          </div>
+          <input type = "text" placeholder="Search" value={filter} onChange={onChangeFilter} className="search"/>
+        </div>
 
-          <FormControl size="medium" className="flex-1 max-w-400 w-ful bg-inputBg rounded-5">
-            <InputLabel id="sort-select">Sort</InputLabel>
-            <Select label="Sort" labelId="sort-select" value={sort} onChange={onChangeSort}>
-              <MenuItem style={menuStyle} value=""><em>None</em></MenuItem>
+        <FormControl size="medium" className="w-full sm:max-w-400 rounded-15">
+          <InputLabel id="sort-select">Sort</InputLabel>
+          <Select label="Sort" labelId="sort-select" value={sort} onChange={onChangeSort}>
+          <MenuItem style={menuStyle} value=""><em>None</em></MenuItem>
               <MenuItem style={menuStyle} value="energyHL">Energy(High-Low)</MenuItem>
               <MenuItem style={menuStyle} value="energyLH">Energy(Low-High)</MenuItem>
               <MenuItem style={menuStyle} value="speedHL">Speed(High-Low)</MenuItem>
@@ -109,26 +111,27 @@ export const LendingPage = () => {
               <MenuItem style={menuStyle} value="fireRateLH">FireRate(Low-High)</MenuItem>
               <MenuItem style={menuStyle} value="firePowerHL">FirePower(High-Low)</MenuItem>
               <MenuItem style={menuStyle} value="firePowerLH">FirePower(Low-High)</MenuItem>
-            </Select>
-          </FormControl>
-        </Stack>
-
-        <ScrollWrapper id="tanklending-container">
+          </Select>
+        </FormControl>
+      </div>
+      <div className="flex-1 flex flex-col gap-1 px-0 py-30">
+        <div id="tanklending-container" >
           <InfiniteScroll next={fetchMore}
             scrollableTarget="tanklending-container"
             hasMore={hasMore} dataLength={myTanks.length}
             loader={<Typography>Loading...</Typography>}
           >
-            <Grid container spacing={2}>
+            <Grid container spacing={4}>
               {myTanks.map((tankClass: NftTankObject, key: any) => (
-                <Grid key={key} item xs={12} sm={6} md={6} lg={4} xl={3}>
+                <Grid key={key} item xs={12} sm={6} md={6} lg={4} xl={2.4}>
                   <TankItemCard item={tankClass} />
                 </Grid>
               ))}
             </Grid>
           </InfiniteScroll>
-        </ScrollWrapper>
-      </GlobalSpacing>
+        </div>
+      </div>
+      </div>
     </Layouts>
   )
 }

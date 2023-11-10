@@ -1,14 +1,21 @@
 import React from "react";
+import { useState, useMemo, useCallback } from "react";
+import styled from "styled-components";
 import Select from "@mui/material/Select";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useState, useMemo, useCallback } from "react";
 import { Box, Stack, TextField, FormControl, InputLabel, MenuItem, Grid, Typography } from "@mui/material";
+
+
+import SearchIcon from '@mui/icons-material/Search';
 
 import { PoolItem } from "./common";
 import { GridItem } from "components/grid";
 import { useGlobalContext } from "provider";
 import { StakedInfoPanel } from "./common/stakedInfoPanel";
 import { GlobalSpacing, Layouts } from "components/layouts/layouts";
+
+
+import userTempCoverImg from "../../assets/image/banner1.webp";
 
 const PoolsPage = () => {
   const [state] = useGlobalContext();
@@ -77,77 +84,112 @@ const PoolsPage = () => {
 
   return (
     <Layouts>
-      <GlobalSpacing className="flex flex-col gap-10">
-        <StakedInfoPanel />
-
-        <Stack gap={2}
-          direction={{ xs: "column", sm: "row" }}
-          className="items-center justify-between mt-60"
-        >
-          <TextField label="Search" variant="outlined"
-            value={filter} onChange={onChangeFilter}
-            className="flex-1 max-w-600 w-full rounded-5 bg-inputBg"
-          />
-
-          <FormControl size="medium" className="flex-1 max-w-400 w-full rounded-5 bg-inputBg">
-            <InputLabel>Sort</InputLabel>
-
-            <Select label="Sort" value={sort} onChange={onChangeSort}>
-              <MenuItem value="" style={MenuStyle}><em>None</em></MenuItem>
-              <MenuItem value={"capacityHL"} style={MenuStyle}>Capacity(High-Low)</MenuItem>
-              <MenuItem value={"capacityLH"} style={MenuStyle}>Capacity(Low-High)</MenuItem>
-              <MenuItem value={"stakedHL"} style={MenuStyle}>Staked(High-Low)</MenuItem>
-              <MenuItem value={"stakedLH"} style={MenuStyle}>Staked(Low-High)</MenuItem>
-              <MenuItem value={"poolSizeHL"} style={MenuStyle}>Pool Size(High-Low)</MenuItem>
-              <MenuItem value={"poolSizeLH"} style={MenuStyle}>Pool Size(Low-High)</MenuItem>
-            </Select>
-          </FormControl>
-        </Stack>
-
-        <Stack>
-          {!!guildDatas && (
-            <Stack direction="row">
-              <Grid container spacing={2} className="px-30 mt-10">
-                <GridItem>
-                  <Typography>Guild</Typography>
-                </GridItem>
-
-                <GridItem>
-                  <Typography>Owner</Typography>
-                </GridItem>
-
-                <GridItem>
-                  <Typography>Staked</Typography>
-                </GridItem>
-
-                <GridItem>
-                  <Typography>Staked/Capacity</Typography>
-                </GridItem>
-              </Grid>
-
-              <Box sx={{ width: "20px" }} />
-            </Stack>
-          )}
-
-          <InfiniteScroll next={fetchMore}
-            scrollableTarget="fullscreen-container"
-            hasMore={hasMore} dataLength={guildDatas.length}
-            loader={<Typography>Loading...</Typography>}
-          >
-            {guildDatas.map((guildData: GuildObject, key: number) => (
-              <PoolItem key={key}
-                expanded={expanded}
-                handleExpand={handleExpand}
-                guildData={guildData}
-                index={key}
-              />
-            ))}
-          </InfiniteScroll>
+      <GlobalSpacing className="flex flex-col gap-30">
+        <Stack direction="row" className="relative min-h-300 w-full items-center">
+          <BackgroundTag>
+            <CoverBGTag />
+            <BackgroundImageTag alt="Tanker" src={userTempCoverImg} />
+            <BackgroundColorTag />
+          </BackgroundTag>
+          <Stack gap={2} flex={1} className="px-30">
+            <h1 style={{fontSize: '56px', fontWeight: '700'}}>Staking</h1>
+            <h2 style={{fontSize: '24px', fontWeight: 500}}>Unique economic model based MMO Tank game</h2>
+          </Stack>
         </Stack>
       </GlobalSpacing>
+      <Stack direction={{ xs: "column", xl: "row" }} gap={3} className="justify-between">
+        <div className="card" style={{flex: 8}}>  
+            <div className="flex justify-between gap-20  ">
+              <div className="search-input" style={{flex: 8}}>
+                <div className="icon">
+                  <SearchIcon className="text-20"/>
+                </div>
+                <input type = "text" placeholder="Search" value={filter} onChange={onChangeFilter} className="search"/>
+              </div>
+              <FormControl size="medium" className="w-full sm:max-w-400 rounded-15" style={{flex: 4}}>
+                <InputLabel id="sort-select">Sort</InputLabel>
+                <Select label="Sort" labelId="sort-select" value={sort} onChange={onChangeSort}>
+                  <MenuItem value="" style={MenuStyle}><em>None</em></MenuItem>
+                  <MenuItem value={"capacityHL"} style={MenuStyle}>Capacity(High-Low)</MenuItem>
+                  <MenuItem value={"capacityLH"} style={MenuStyle}>Capacity(Low-High)</MenuItem>
+                  <MenuItem value={"stakedHL"} style={MenuStyle}>Staked(High-Low)</MenuItem>
+                  <MenuItem value={"stakedLH"} style={MenuStyle}>Staked(Low-High)</MenuItem>
+                  <MenuItem value={"poolSizeHL"} style={MenuStyle}>Pool Size(High-Low)</MenuItem>
+                  <MenuItem value={"poolSizeLH"} style={MenuStyle}>Pool Size(Low-High)</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+            <Stack className="mt-20">
+              <InfiniteScroll next={fetchMore}
+                scrollableTarget="fullscreen-container"
+                hasMore={hasMore} dataLength={guildDatas.length}
+                loader={<Typography>Loading...</Typography>}
+              >
+                {guildDatas.map((guildData: GuildObject, key: number) => (
+                  <PoolItem key={key}
+                    expanded={expanded}
+                    handleExpand={handleExpand}
+                    guildData={guildData}
+                    index={key}
+                  />
+                ))}
+              </InfiniteScroll>
+            </Stack>
+        </div>
+        <div className="card flex justify-between gap-20 " style={{flex: 4}}>
+          <StakedInfoPanel />
+        </div>
+      </Stack>
     </Layouts>
   )
 }
+
+const BackgroundTag = styled("div")(({ theme }) => ({
+  // backgroundColor: "#6e120066",
+  position: "absolute",
+  left: 0,
+  top: 0,
+  width: "100%",
+  height: "100%",
+  zIndex: -1,
+  borderRadius: '16px',
+  overflow: 'hidden'
+}))
+
+const BackgroundImageTag = styled("img")(({ theme }) => ({
+  position: "absolute",
+  left: 0,
+  top: 0,
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+  opacity: "0.7",
+}))
+
+const CoverBGTag = styled("div")(({ theme }) => ({
+  backgroundColor: "rgba(36, 36, 36, 1)",
+  position: "absolute",
+  left: 0,
+  top: 0,
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+  opacity: "0.7"
+}))
+
+const BackgroundColorTag = styled("div")(({ theme }) => ({
+  backgroundColor: "linear-gradient(180deg, rgba(0, 0, 0, 0), #000000 105.04%)",
+  background: "linear-gradient(180deg, rgba(0, 0, 0, 0), #000000 105.04%)",
+  boxShadow: '0px 4px 32px 0px rgba(0, 0, 0, 0.08)',
+  position: "absolute",
+  left: 0,
+  top: 0,
+  opacity: "0.4",
+  width: "100%",
+  height: "100%",
+}))
+
+
 
 const MenuStyle = {
   padding: '0.6rem 1rem',

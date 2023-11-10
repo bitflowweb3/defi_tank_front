@@ -31,9 +31,9 @@ const ManageNFTs = ({ address, userData, updateUserData }: ProfilePanelProps) =>
   }
 
   return (
-    <div className="basetap-wrapper gap-20">
-      <Box className='border-b border-white/50'>
-        <Tabs value={value} onChange={onChangeTap} aria-label="">
+    <div className="basetap-wrapper ">
+      <Box className=''>
+        <Tabs value={value} onChange={onChangeTap} aria-label="" TabIndicatorProps={{style: {display: 'none'}}}>
           <TapHeader value="tank" label="Manage Tanks" />
           <TapHeader value="guild" label="Manage Guilds" />
 
@@ -44,8 +44,8 @@ const ManageNFTs = ({ address, userData, updateUserData }: ProfilePanelProps) =>
       </Box>
 
 
-      <CustomTabPanel value="tank" index={value}>
-        <ManageTanks address={address} />
+      <CustomTabPanel value="tank" index={value} className="px-0">
+        <ManageTanks address={address}/>
       </CustomTabPanel>
 
       <CustomTabPanel value="guild" index={value}>

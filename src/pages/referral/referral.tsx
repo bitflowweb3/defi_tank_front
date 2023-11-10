@@ -239,6 +239,7 @@ const ReferralPage = () => {
               variant="outlined" value={status.filter}
               className="w-full bg-inputBg rounded-5"
               onChange={(e: any) => updateStatus({ filter: e.target.value })}
+              style={{background: 'rgba(31,31,31,0.9)'}}
             />
           </Grid>
         </Grid>
@@ -248,7 +249,7 @@ const ReferralPage = () => {
             pageSize={10} columns={columns}
             getRowId={(row) => row.address}
             rowHeight={70} rowsPerPageOptions={[10]}
-            style={{ backgroundColor: '#00000094', borderRadius: '10px' }}
+            style={{ borderRadius: '10px', backgroundColor: 'rgba(31,31,31,0.9)' }}
           />
         </div>
       </GlobalSpacing>

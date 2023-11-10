@@ -1,7 +1,8 @@
 import React from "react";
 import { useState, useCallback, useMemo } from "react";
-import { MenuItem, Grid, Select, Modal } from "@mui/material";
+import { MenuItem, Grid, Select, Modal, Box } from "@mui/material";
 import { Stack, TextField, FormControl, InputLabel } from "@mui/material";
+import SearchIcon from '@mui/icons-material/Search';
 
 import { useGlobalContext } from "provider";
 import { TankItem } from "./common/item";
@@ -69,13 +70,15 @@ const CreateTanks = () => {
 
   return (
     <div className="flex-1 flex flex-col gap-10">
-      <Stack gap={2} direction={{ xs: "column", sm: "row" }} className="items-center justify-between">
-        <TextField label="Search" variant="outlined"
-          value={filter} onChange={onChangeFilter}
-          className="w-full sm:max-w-600 bg-inputBg rounded-5"
-        />
+      <div className="card flex justify-between gap-20">
+        <div className="search-input">
+          <div className="icon">
+            <SearchIcon className="text-20"/>
+          </div>
+          <input type = "text" placeholder="Search" value={filter} onChange={onChangeFilter} className="search"/>
+        </div>
 
-        <FormControl size="medium" className="w-full sm:max-w-400 bg-inputBg rounded-5">
+        <FormControl size="medium" className="w-full sm:max-w-400 rounded-15">
           <InputLabel id="sort-select">Sort</InputLabel>
           <Select label="Sort" labelId="sort-select" value={sort} onChange={onChangeSort}>
             <MenuItem value="" style={menuStyle}><em>None</em></MenuItem>
@@ -91,17 +94,17 @@ const CreateTanks = () => {
             <MenuItem value="firePowerHL" style={menuStyle}>FirePower(High-Low)</MenuItem>
           </Select>
         </FormControl>
-      </Stack>
+      </div>
 
-      <ScrollWrapper>
-        <Grid container spacing={2}>
+      <div className="py-30">
+        <Grid container spacing={3}>
           {tankClassList.map((tankClass: TankClassObject, key: any) => (
-            <Grid key={key} item xs={12} sm={12} md={6} lg={4} xl={3}>
+            <Grid key={key} item xs={12} sm={12} md={6} lg={4} xl={2.4}>
               <TankItem item={tankClass} setBuyItem={setBuyItem} />
             </Grid>
           ))}
         </Grid>
-      </ScrollWrapper>
+      </div>
 
       <Modal open={buyItem != null} onClose={() => setBuyItem(null)}>
         <div className="">
