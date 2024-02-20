@@ -55,13 +55,13 @@ const MenuContainer = () => {
         )}
       </div>
       <div className="flex flex-col gap-5 text-white/75">
-          <Link to={"/partnership"} className={`flex flex-row gap-10 items-center px-25 py-10 rounded-25 hover:bg-menuBg hover:text-white opacity-70`}>
+          <Link to={"https://docs.defitankland.com/"} target = "_blank" className={`flex flex-row gap-10 items-center px-25 py-10 rounded-25 hover:bg-menuBg hover:text-white opacity-70`}>
             <HandshakeIcon className="text-30" />
             <div className="text-15 ">
               Partnership
             </div>
           </Link>
-          <Link to={"/document"} className={`flex flex-row gap-10 items-center px-25 py-10 rounded-25 hover:bg-menuBg hover:text-white opacity-70`}>
+          <Link to={"https://docs.defitankland.com/"} target = "_blank"  className={`flex flex-row gap-10 items-center px-25 py-10 rounded-25 hover:bg-menuBg hover:text-white opacity-70`}>
             <ArticleIcon className="text-30" />
             <div className="text-15 ">
               Documentation
@@ -79,7 +79,7 @@ const MenuContainer = () => {
           </div>
           
           <div className={`flex flex-row gap-10 justify-center items-center px-25 py-10 text-15 opacity-70`}>
-            DefiTankLand v0.6.5
+            DefiTankLand v1.0.0
           </div>
       </div>
     </div>

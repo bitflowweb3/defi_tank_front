@@ -32,7 +32,7 @@ const ToolTipContent = ({ spell }: SellitemProps) => {
       </Stack>
 
       <Typography color="inherit" variant="caption">
-       {spell.discription}
+       {spell.description}
       </Typography>
     </Stack>
   )

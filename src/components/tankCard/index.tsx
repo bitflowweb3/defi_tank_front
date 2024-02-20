@@ -100,7 +100,7 @@ const TankItemCard = ({ item }: TankCardProps) => {
 
       <Stack direction="column" className='relative' onClick={handleDetail}>
         <CardMedia alt="" component="img"
-          className='h-194 cursor-pointer'
+          className='cursor-pointer'
           image={tankInfo.image}
         />
 

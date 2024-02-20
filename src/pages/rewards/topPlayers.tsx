@@ -3,7 +3,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Box, Grid, Stack, Typography, TextField } from "@mui/material";
 
-import { convertHMS, toLanguageFormat } from "utils/util";
+import { convertHMS, textEllipsis, toLanguageFormat } from "utils/util";
 import { useGlobalContext } from "provider";
 import rewardIMG from "assets/image/reward.webp";
 
@@ -39,6 +39,9 @@ const columns: GridColDef[] = [
     align: "center",
     minWidth: 150,
     flex: 2,
+    renderCell: (params) => (
+      <a href={`/user/${params.value}`}>{textEllipsis(params.value)}</a>
+    )
   }, {
     field: "merit",
     headerName: "Merit",
@@ -146,7 +149,7 @@ const TopPlayers = ({ users, rewardTime }: TopPlayersProps) => {
           <TextField label="Search" variant="outlined"
             value={filter} onChange={onChangeFilter}
             className="w-full rounded-5"
-            style={{background: 'rgba(31,31,31,0.9)'}}
+            style={{ background: 'rgba(31,31,31,0.9)' }}
           />
         </Grid>
       </Grid>

@@ -9,10 +9,10 @@ import { GlobalSpacing, Layouts } from "components/layouts/layouts";
 
 const PlayGame = () => {
   const { unityProvider, requestFullscreen, unload, isLoaded, loadingProgression } = useUnityContext({
-    loaderUrl: "build/webgl1.loader.js",
-    dataUrl: "build/webgl1.data.unityweb",
-    frameworkUrl: "build/webgl1.framework.js.unityweb",
-    codeUrl: "build/webgl1.wasm.unityweb",
+    loaderUrl: "build/WebGL.loader.js",
+    dataUrl: "build/WebGL.data.unityweb",
+    frameworkUrl: "build/WebGL.framework.js.unityweb",
+    codeUrl: "build/WebGL.wasm.unityweb",
   })
 
   const loadingPercentage = Math.round(loadingProgression * 100);
@@ -71,8 +71,8 @@ const PlayGame = () => {
               <Box className="playGame-container max-w-1500 rounded-12 border-white">
                 {isLoaded === false && (
                   <Box className="loading-overlay" >
-                    <Stack className="w-full mb-40">
-                      <Typography>Loading</Typography>
+                    <Stack className="w-full">
+                      <Typography fontSize={24} >Loading</Typography>
 
                       <BorderLinearProgress
                         variant="determinate"

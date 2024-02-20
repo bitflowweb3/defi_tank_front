@@ -2,7 +2,7 @@ interface SpellObject {
   id: number
   tankID: number
   name: string
-  discription: string
+  description: string
   image: string
   params: string
   stat: number

@@ -50,7 +50,7 @@ const ProfilePanel = ({ address, userData, updateUserData }: ProfilePanelProps) 
 
   return (
     <>
-      <Stack direction="row" className="relative min-h-300 w-full items-center">
+      {/* <Stack direction="row" className="relative min-h-300 w-full items-center">
         <BackgroundTag>
           <CoverBGTag />
           <BackgroundImageTag alt="Tanker" src={userTempCoverImg} />
@@ -60,7 +60,8 @@ const ProfilePanel = ({ address, userData, updateUserData }: ProfilePanelProps) 
           <h1 style={{fontSize: '56px', fontWeight: '700'}}>DefiTankLand</h1>
           <h2 style={{fontSize: '24px', fontWeight: 500}}>Unique economic model based MMO Tank game</h2>
         </Stack>
-        {(state.account && state.account === address) && (
+      </Stack> */}
+      {(state.account && state.account === address) && (
           <Modal open={openModal} onClose={() => setOpenModal(false)}>
             <div className="">
               <EditProfile profile={userData}
@@ -71,7 +72,6 @@ const ProfilePanel = ({ address, userData, updateUserData }: ProfilePanelProps) 
             </div>
           </Modal>
         )}
-      </Stack>
       <StyledAccountPanel>
         <Stack flex={1} gap={2}
           direction={{ sm: "column", md: "row" }}

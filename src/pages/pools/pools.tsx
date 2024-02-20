@@ -97,8 +97,8 @@ const PoolsPage = () => {
           </Stack>
         </Stack>
       </GlobalSpacing>
-      <Stack direction={{ xs: "column", xl: "row" }} gap={3} className="justify-between">
-        <div className="card" style={{flex: 8}}>  
+      <Stack direction={{ xs: "column", xl: "row" }} gap={3} className="justify-between p-10">
+        <div className="card " style={{flex: 8}}>  
             <div className="flex justify-between gap-20  ">
               <div className="search-input" style={{flex: 8}}>
                 <div className="icon">

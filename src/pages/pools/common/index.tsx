@@ -80,7 +80,7 @@ const PoolItem = (props: PoolitemProps) => {
           <Typography>
             {toLanguageFormat(guildData.stakingPool)}/{toLanguageFormat(guildData.maxStakingPool)}
           </Typography>
-            {state.walletStatus === 2 && (
+            {/* {state.walletStatus === 2 && ( */}
               <div className="pt-30">
                     <NumberInputPanel label="DFTL"
                       balance={state.balance}
@@ -89,7 +89,7 @@ const PoolItem = (props: PoolitemProps) => {
                       max={maxAmount}
                     />
                     <div className="pt-30">
-                      <NumberInputPanel label="DFTL"
+                      <NumberInputPanel label="SDFTL"
                         balance={state.stakes[guildData.id] || 0}
                         max={state.stakes[guildData.id] || 0}
                         onAction={handleUnstake}
@@ -97,7 +97,7 @@ const PoolItem = (props: PoolitemProps) => {
                       />
                     </div>
               </div>
-            )}
+            {/* )} */}
 
         </Grid>
       </Grid> 
