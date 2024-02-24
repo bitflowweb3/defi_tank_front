@@ -23,7 +23,7 @@ const columns: GridColDef[] = [
     sortable: false,
     minWidth: 130,
     renderCell: (params) => (
-      <img alt="" src={params.value||baseGuild}
+      <img alt="" src={params.value || baseGuild}
         className="w-50 h-50 object-cover rounded-full"
       />
     )
@@ -77,10 +77,8 @@ const TopGuilds = ({ guilds, rewardTime }: TopGuildsProps) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setCount(prevCount => prevCount + 1);
-      const currentTime = + new Date();
-      const tempRewardTime = + new Date(rewardTime);
-      const duration = (tempRewardTime - currentTime) / 1000;
 
+      const duration = rewardTime / 1000 - count;
       if (rewardTime === 0 || duration <= 0) setRewardIn(0);
       else setRewardIn(Math.floor(duration || 0));
     }, 1000)
@@ -133,7 +131,7 @@ const TopGuilds = ({ guilds, rewardTime }: TopGuildsProps) => {
           <Grid item xs={12} md={4} lg={3} key={index}>
             <RoundItem
               exp={guild.merit}
-              image={guild.image||baseGuild}
+              image={guild.image || baseGuild}
               amount={guild.reward}
               tankOwner={guild.name}
             />
@@ -146,7 +144,7 @@ const TopGuilds = ({ guilds, rewardTime }: TopGuildsProps) => {
           <TextField label="Search" variant="outlined"
             value={filter} onChange={onChangeFilter}
             className="w-full  rounded-5"
-            style={{background: 'rgba(31,31,31,0.9)'}}
+            style={{ background: 'rgba(31,31,31,0.9)' }}
           />
         </Grid>
       </Grid>
@@ -172,7 +170,7 @@ const RoundItem = (props: any) => {
   return (
     <Stack direction="row" className="rewardItem-wrapper">
       <Stack direction="row" gap={2} className="items-center justify-start">
-        <img alt="" src={image||baseGuild}
+        <img alt="" src={image || baseGuild}
           className="w-70 h-70 text-center rounded-8"
         />
 

@@ -78,10 +78,7 @@ const TopPlayers = ({ users, rewardTime }: TopPlayersProps) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setCount(prevCount => prevCount + 1);
-      const currentTime = + new Date();
-      const tempRewardTime = + new Date(rewardTime);
-      const duration = (tempRewardTime - currentTime) / 1000;
-
+      const duration = rewardTime / 1000 - count;
       if (rewardTime === 0 || duration <= 0) setRewardIn(0);
       else setRewardIn(Math.floor(duration || 0));
     }, 1000)
