@@ -72,6 +72,14 @@
 		"explorer": "https://sepolia.arbiscan.io"
 	},
 	{
+		"chainId": 42161,
+		"name": "Arbitrum",
+		"symbol": "AGOR",
+		"decimals": 18,
+		"rpc": "https://arb1.arbitrum.io/rpc",
+		"explorer": "https://arbiscan.io"
+	},
+	{
 		"chainId": 351,
 		"name": "mugambo testnet",
 		"symbol": "MBR",

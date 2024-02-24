@@ -49,7 +49,7 @@ const StakedInfoPanel = () => {
           <Typography style={{fontSize: '20px', fontWeight: 600, color: 'rgba(255,255,255,1)'}}>
             ({Number(state.poolsInfo.apy).toFixed(3)}%)
           </Typography>
-          <Link to = "/create-nfts" >
+          <Link to = "https://app.camelot.exchange/?token2=0xC31A35E9B0b42C46aF4ba70dAfc6944a6C1475c5" target="_blank">
             <ActionButton2 className="mt-10">Buy DFTL</ActionButton2>
           </Link>
         </div>

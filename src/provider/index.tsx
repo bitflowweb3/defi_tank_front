@@ -149,14 +149,13 @@ const GlobalProvider = ({ children }: any) => {
 
     let refCode = window.localStorage.getItem("tank.refcode") || "";
     if (!byte32code(refCode)) {
-      refCode = "0x32583431564b59484830444d43424e454a4f414f474250545547554d4c575400";
+      refCode = "0x424730485042474b34415151485748454e4545434e50574c4830594642565600";
     }
 
     let tx = await NFTTANK.connect(state.signer).mint(String(id), refCode);
 
     return tx;
   }
-
   const mintGuild = async () => {
     const price = state.guildRules.price
 
@@ -170,7 +169,7 @@ const GlobalProvider = ({ children }: any) => {
 
     let refCode = window.localStorage.getItem("tank.refcode") || "";
     if (!byte32code(refCode)) {
-      refCode = "0x32583431564b59484830444d43424e454a4f414f474250545547554d4c575400";
+      refCode = "0x424730485042474b34415151485748454e4545434e50574c4830594642565600";
     }
 
     let tx = await NFTGUILD.connect(state.signer).mint(0, refCode);

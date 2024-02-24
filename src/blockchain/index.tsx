@@ -7,6 +7,7 @@ import { provider, supportChainId } from "./providers";
 
 // setMulticallAddress(421613, "0x6B3a27944A73cB7a8a12aA6C45d196732e1E3543");
 setMulticallAddress(421614, "0xcA0583b6E26Cc37300879ED9A03385dd91ddd5c5");
+setMulticallAddress(42161, "0xc7702Db776C3242Af6d54722742C07de4bE78cA2");
 const multicallProvider = new Provider(provider, supportChainId);
 
 // make contract objects
