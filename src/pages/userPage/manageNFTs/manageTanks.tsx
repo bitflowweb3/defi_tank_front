@@ -1,6 +1,6 @@
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Stack, TextField, Grid, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { Grid, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 
 import { useGlobalContext } from "provider";
 import { menuStyle } from "components/styles";
@@ -64,9 +64,9 @@ const ManageTanks = ({ address }) => {
       <div className="card flex justify-between gap-20 mt-10 mb-10">
         <div className="search-input">
           <div className="icon">
-            <SearchIcon className="text-20"/>
+            <SearchIcon className="text-20" />
           </div>
-          <input type = "text" placeholder="Search" value={filter} onChange={onChangeFilter} className="search"/>
+          <input type="text" placeholder="Search" value={filter} onChange={onChangeFilter} className="search" />
         </div>
 
         <FormControl size="medium" className="w-full sm:max-w-400 rounded-15">

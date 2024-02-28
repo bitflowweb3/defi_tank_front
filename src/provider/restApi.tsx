@@ -45,9 +45,8 @@ export const restApi = {
     return result.data
   },
 
-  claimReward: async (user: any) => {
-    const params = { user: user }
-    const result = await axios.post("/api/user/claim-reward", params)
+  claimReward: async (address: any) => {
+    const result = await axios.post("/api/user/claim-reward", { address })
     return result.data
   },
 
