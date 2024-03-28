@@ -24,6 +24,7 @@ import { apiNotification } from "utils/services";
 import { SpellItemCard } from "components/spellCard";
 import { CustomTooltip } from "components/tooltip";
 import { ValidateError } from "utils/customError";
+import { Rating } from "components/rating/rating";
 
 enum ItemType {
   "onUser",
@@ -73,7 +74,7 @@ const PropertyPanel = ({ item, classInfo }: { item: NftTankObject, classInfo: Ta
       {properties.map((property: any, key: number) => (
         <Stack direction="row" key={key}
           className="items-center justify-between p-10"
-          sx={{ borderRadius: 2,  border: "1px solid #333" }}
+          sx={{ borderRadius: 2, border: "1px solid #333" }}
         >
           <Stack direction="row" gap={1} className="items-center justify-start">
             <img alt="" src={property.icon} className="w-30 text-center" />
@@ -139,13 +140,24 @@ const TankDetail = () => {
     }
   }, [state.tankItems, state.tankClasses, id])
 
-  const tankInfo: TankDetailObject | null = useMemo(() => {
+  const tankInfo: TankDetailObject | any = useMemo(() => {
     if (!item) return null;
 
     let energyRecoverPerHour = (item.maxEnergy / 24).toFixed(2);
     let itemType = item.owner === state.account ? ItemType.onUserMine : ItemType.onUser;
+    let winnerBadgePoint = Math.floor(item.winnerBadge / 10);
+    let nextWinnerBadgePointProgress = item.winnerBadge % 10;
 
-    return { ...item, itemType, energyRecoverPerHour };
+    if (winnerBadgePoint > 0 && nextWinnerBadgePointProgress === 0) {
+      nextWinnerBadgePointProgress = 10;
+    }
+
+    return {
+      ...item, itemType,
+      energyRecoverPerHour,
+      winnerBadgePoint,
+      nextWinnerBadgePointProgress,
+    }
   }, [item, state.account])
 
   const handleLend = async () => {
@@ -336,14 +348,20 @@ const TankDetail = () => {
             </div>
 
             <div className="flex flex-col gap-10 mt-10">
-              <div className="flex flex-row gap-10 justify-between items-center">
+              <div className="flex-wrap flex flex-row gap-10 justify-between items-center">
                 <Typography variant="h5">Properties</Typography>
 
-                {item.owner === state.account && (
-                  <ActionButton1 onClick={() => { setOpenUpgrade(true) }}>
-                    Upgrade
-                  </ActionButton1>
-                )}
+                <div className="flex flex-row gap-10 items-center">
+                  <CustomTooltip title={<WinnerBadgeContent badge={tankInfo.winnerBadgePoint} />}>
+                    <Rating count={tankInfo.winnerBadgePoint} progress={tankInfo.nextWinnerBadgePointProgress} />
+                  </CustomTooltip>
+
+                  {item.owner === state.account && (
+                    <ActionButton1 onClick={() => { setOpenUpgrade(true) }}>
+                      Upgrade
+                    </ActionButton1>
+                  )}
+                </div>
               </div>
 
               <PropertyPanel item={item} classInfo={classInfo} />
@@ -380,6 +398,14 @@ const ToolTipContent = ({ golds }: { golds: string }) => {
     <Stack direction="row" gap={1}>
       <Typography variant="body2">{golds}</Typography>
       <img alt="" src={goldAssets} className="w-20" />
+    </Stack>
+  )
+}
+
+const WinnerBadgeContent = ({ badge }: { badge: number }) => {
+  return (
+    <Stack direction="row" gap={1}>
+      <Typography variant="body2">Winner Badge {badge}</Typography>
     </Stack>
   )
 }

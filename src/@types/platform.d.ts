@@ -49,6 +49,7 @@ interface NftTankObject {
   upgradedPoints: UpgradablePointsObject
 
   tankLevel: number
+  winnerBadge: number
   experience: number
   targetExp: number
   spells: SpellObject[]

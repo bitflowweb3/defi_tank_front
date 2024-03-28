@@ -12,6 +12,15 @@ declare module '@mui/material/styles' {
     // laptop: true;
     // desktop: true;
   }
+
+  interface CommonColors {
+    ratingColor: string
+    ratingBackground: string
+    ratingBorderColor: string
+    ratingBoxShadow: string
+  }
+
+
 }
 
 const theme = createTheme({
@@ -30,6 +39,14 @@ const theme = createTheme({
   },
   palette: {
     mode: "dark",
+
+    common: {
+      ratingColor: "#27ae60",
+      ratingBackground: "#27ae60",
+      ratingBorderColor: "#1f1f1f",
+      ratingBoxShadow: "#141414",
+    },
+
     primary: { main: "#fff", light: "#f55b00", dark: "rgba(36, 36, 36, 1)" },
     secondary: { main: "#55322c", light: "#ccad45", dark: "#1e0500" },
     error: { main: "#da2607" },
